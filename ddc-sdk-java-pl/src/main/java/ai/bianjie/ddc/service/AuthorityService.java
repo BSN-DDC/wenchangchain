@@ -71,5 +71,4 @@ public class AuthorityService extends BaseService {
         encodedFunction = authority.updateAccountState(account, state, changePlatformState).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_UPDATEACCOUNTSTATE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
-
 }

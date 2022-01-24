@@ -191,7 +191,8 @@ public class BaseService {
         byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
         ECKeyPair keyPair = ECKeyPair.create(sha256(seed));
         String addr = Keys.getAddress(keyPair);
-        return new Account(mnemonic, keyPair.getPublicKey(), keyPair.getPrivateKey(), addr);
+
+        return new Account(mnemonic, keyPair.getPublicKey().toString(16), keyPair.getPrivateKey().toString(16), addr);
         //privatekey: "0x"+keyPair.getPrivateKey().toString(16)
         //publickey: keyPair.getPublicKey().toString(16)
     }
@@ -199,5 +200,9 @@ public class BaseService {
     public String AccountHexToBech32(String addr) {
         String hrp = "iaa";
         return Bech32Utils.hexToBech32(hrp, addr);
+    }
+
+    public String AccountBech32ToHex(String addr) {
+        return Bech32Utils.bech32ToHex(addr);
     }
 }

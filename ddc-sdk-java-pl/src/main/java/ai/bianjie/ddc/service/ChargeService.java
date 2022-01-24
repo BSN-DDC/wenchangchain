@@ -23,12 +23,12 @@ public class ChargeService extends BaseService {
 
 
     /**
-     * ÔËÓª·½¡¢Æ½Ì¨·½µ÷ÓÃ¸Ã½Ó¿ÚÎªËùÊôÍ¬Ò»·½µÄÍ¬Ò»¼¶±ðÕË»§»òÕßÏÂ¼¶ÕË»§³äÖµ£»
+     * ï¿½ï¿½Óªï¿½ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸Ã½Ó¿ï¿½Îªï¿½ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Ë»ï¿½ï¿½ï¿½Öµï¿½ï¿½
      *
-     * @param sender µ÷ÓÃÕßµØÖ·
-     * @param to     ³äÖµÕË»§µÄµØÖ·
-     * @param amount ³äÖµ½ð¶î
-     * @return ·µ»Ø½»Ò×¹þÏ£
+     * @param sender ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½Ö·
+     * @param to     ï¿½ï¿½Öµï¿½Ë»ï¿½ï¿½Äµï¿½Ö·
+     * @param amount ï¿½ï¿½Öµï¿½ï¿½ï¿½
+     * @return ï¿½ï¿½ï¿½Ø½ï¿½ï¿½×¹ï¿½Ï£
      * @throws Exception
      */
     public String recharge(String sender, String to, BigInteger amount) throws Exception {
@@ -53,10 +53,10 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ²éÑ¯Ö¸¶¨ÕË»§µÄÓà¶î¡£
+     * ï¿½ï¿½Ñ¯Ö¸ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½ï¿½ï¿½î¡£
      *
-     * @param accAddr ²éÑ¯µÄÕË»§µØÖ·
-     * @return ·µ»ØÕË»§Ëù¶ÔÓ¦µÄÒµÎñ·ÑÓà¶î
+     * @param accAddr ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½Ö·
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @throws Exception
      */
     public BigInteger balanceOf(String accAddr) throws Exception {
@@ -73,11 +73,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ²éÑ¯Ö¸¶¨µÄDDCÒµÎñÖ÷Âß¼­ºÏÔ¼µÄ·½·¨Ëù¶ÔÓ¦µÄµ÷ÓÃÒµÎñ·ÑÓÃ¡£
+     * ï¿½ï¿½Ñ¯Ö¸ï¿½ï¿½ï¿½ï¿½DDCÒµï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½Ô¼ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Äµï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½Ã¡ï¿½
      *
-     * @param ddcAddr DDCÒµÎñºÏÔ¼µØÖ·
-     * @param sig     Hex¸ñÊ½µÄºÏÔ¼·½·¨ID
-     * @return ·µ»Ø²éÑ¯µÄDDCºÏÔ¼ÒµÎñ·Ñ
+     * @param ddcAddr DDCÒµï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Ö·
+     * @param sig     Hexï¿½ï¿½Ê½ï¿½Äºï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ID
+     * @return ï¿½ï¿½ï¿½Ø²ï¿½Ñ¯ï¿½ï¿½DDCï¿½ï¿½Ô¼Òµï¿½ï¿½ï¿½
      * @throws Exception
      */
     public BigInteger queryFee(String ddcAddr, String sig) throws Exception {
@@ -101,5 +101,4 @@ public class ChargeService extends BaseService {
 
         return Web3jUtils.getCharge().queryFee(ddcAddr, sigInByte).send();
     }
-
 }

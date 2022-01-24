@@ -37,6 +37,8 @@ class DDCSdkClientTest {
         BaseService baseService=new BaseService();
         Account acc = baseService.createAccountHex();
         System.out.println("================================" + acc.getAddress());
+
+        System.out.println("================================" + acc.getPrivateKey());
         String addHex= baseService.AccountHexToBech32(acc.getAddress());
         System.out.println("================================" + addHex);
 //        BigInteger b = client.getChargeService().setGasLimitCharge("1").balanceOf("918F7F275A6C2D158E5B76F769D3F1678958A334");

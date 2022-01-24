@@ -22,6 +22,7 @@ class AuthorityServiceTest {
     AuthorityService authorityService = client.getAuthorityService();
     String sender="0x953488F7E292A7D6CB0BFF81BA806B82E5FD47A2";
 
+
     @Test
     void getAccount() throws Exception {
         client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");

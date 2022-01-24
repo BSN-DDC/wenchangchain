@@ -1,13 +1,10 @@
 package ai.bianjie.ddc.dto;
 
-import java.math.BigInteger;
-import java.util.List;
-
 public class Account {
 
     private String Keyseed;
-    private BigInteger PubulicKey;
-    private BigInteger PrivateKey;
+    private String PubulicKey;
+    private String PrivateKey;
     private String Address;
 
     public Account() {
@@ -21,19 +18,19 @@ public class Account {
         Keyseed = keyseed;
     }
 
-    public BigInteger getPubulicKey() {
+    public String getPubulicKey() {
         return PubulicKey;
     }
 
-    public void setPubulicKey(BigInteger pubulicKey) {
+    public void setPubulicKey(String pubulicKey) {
         PubulicKey = pubulicKey;
     }
 
-    public BigInteger getPrivateKey() {
+    public String getPrivateKey() {
         return PrivateKey;
     }
 
-    public void setPrivateKey(BigInteger privateKey) {
+    public void setPrivateKey(String privateKey) {
         PrivateKey = privateKey;
     }
 
@@ -45,7 +42,7 @@ public class Account {
         Address = address;
     }
 
-    public Account(String Keyseed, BigInteger PubulicKey, BigInteger PrivateKey, String Address) {
+    public Account(String Keyseed, String PubulicKey, String PrivateKey, String Address) {
         this.Keyseed = Keyseed;
         this.PubulicKey = PubulicKey;
         this.PrivateKey = PrivateKey;

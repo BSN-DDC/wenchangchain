@@ -76,4 +76,12 @@ class BaseServiceTest {
        Account acc = baseService.createAccountHex();
         System.out.println(baseService.AccountHexToBech32(acc.getAddress()));
     }
+
+    @Test
+    void AccountBech32ToHex() throws IOException, MnemonicException.MnemonicLengthException {
+        Account acc = baseService.createAccountHex();
+        System.out.println(acc.getAddress());
+        String a = baseService.AccountHexToBech32(acc.getAddress());
+        System.out.println(baseService.AccountBech32ToHex(a));
+    }
 }
