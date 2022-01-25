@@ -407,7 +407,7 @@ BaseService baseService=new BaseService();
 ```
 ### 10.创建ddc后通过hash获取ddcId
 
-private BigInteger getDdcIdFromEventLog(String txHash) throws Exception {
+    private BigInteger getDdcIdFromEventLog(String txHash) throws Exception {
         BigInteger ddcId = null;
         ArrayList<BaseEventResponse> baseEventResponsesList = blockEventService.analyzeEventsByTxHash(txHash);
 
