@@ -32,8 +32,8 @@ chargeLogicAddress: "0x3BBb01B38958d4dbF1e004611EbB3c65979B0511"
                 .setChargeLogicAddress("充值合约地址")
                 .setDDC721Address("ddc721合约地址")
                 .setDDC1155Address("ddc1155合约地址")
-                .setGasLimit("3000000")
-                .setGasPrice("10000000")
+                .setGasLimit("300000")
+                .setGasPrice("1000000000000")
                 .setSignEventListener(signEventListener)
                 .init();
      //设置网关
