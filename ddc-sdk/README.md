@@ -37,7 +37,7 @@ chargeLogicAddress: "0x3BBb01B38958d4dbF1e004611EbB3c65979B0511"
                 .setSignEventListener(signEventListener)
                 .init();
      //设置网关
-     client.setGatewayUrl("192.168.42.1");
+     client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[project_id]/evmrpc/");
      //设置key
      client.setGatewayApiKey("x-api-key");
     
