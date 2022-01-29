@@ -1,15 +1,11 @@
 # DDC-SDK-JAVA
 
 ## 运营方可调用的如下方法：
-### 测试合约地址信息：
-# ddc721合约地址
-ddc721Address: "0x3B09b7A00271C5d9AE84593850dE3A526b8BF96e"
-# ddc1155合约地址
-ddc1155Address: "0xe5d3b9E7D16E03A4A1060c72b5D1cb7806DD9070"
-# 权限合约地址
-authorityLogicAddress: "0xa7FC5B0F4A0085c5Ce689b919a866675Ce37B66b"
-# 充值合约地址
-chargeLogicAddress: "0x3BBb01B38958d4dbF1e004611EbB3c65979B0511"
+### 合约地址信息：
+# 权限代理合约地址 ： 0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29
+# 计费代理合约地址 ： 0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D
+# DDC 721代理合约地址 ： 0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870
+# DDC 1155代理合约地址 ： 0x0E762F4D11439B1130D402995328b634cB9c9973
 
 
 ### 1.初始化Client (连接测试网)
