@@ -2,12 +2,14 @@ package ai.bianjie.ddc.contract;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
@@ -34,7 +36,7 @@ import org.web3j.tx.gas.ContractGasProvider;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with web3j version 1.4.1.
@@ -89,44 +91,69 @@ public class DDC1155 extends Contract {
 
     public static final String FUNC_UPGRADETOANDCALL = "upgradeToAndCall";
 
-    public static final Event ADMINCHANGED_EVENT = new Event("AdminChanged", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}));
+    public static final Event ADMINCHANGED_EVENT = new Event("AdminChanged",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }, new TypeReference<Address>() {
+            }));
     ;
 
-    public static final Event APPROVALFORALL_EVENT = new Event("ApprovalForAll", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Bool>() {}));
+    public static final Event APPROVALFORALL_EVENT = new Event("ApprovalForAll",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }, new TypeReference<Bool>() {
+            }));
     ;
 
-    public static final Event BEACONUPGRADED_EVENT = new Event("BeaconUpgraded", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}));
+    public static final Event BEACONUPGRADED_EVENT = new Event("BeaconUpgraded",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }));
     ;
 
-    public static final Event ENTERBLACKLIST_EVENT = new Event("EnterBlacklist", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}));
+    public static final Event ENTERBLACKLIST_EVENT = new Event("EnterBlacklist",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Uint256>() {
+            }));
     ;
 
-    public static final Event EXITBLACKLIST_EVENT = new Event("ExitBlacklist", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}));
+    public static final Event EXITBLACKLIST_EVENT = new Event("ExitBlacklist",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Uint256>() {
+            }));
     ;
 
-    public static final Event OWNERSHIPTRANSFERRED_EVENT = new Event("OwnershipTransferred", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}));
+    public static final Event OWNERSHIPTRANSFERRED_EVENT = new Event("OwnershipTransferred",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }));
     ;
 
-    public static final Event SETURI_EVENT = new Event("SetURI", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>(true) {}, new TypeReference<Utf8String>() {}));
+    public static final Event SETURI_EVENT = new Event("SetURI",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>(true) {
+            }, new TypeReference<Utf8String>() {
+            }));
     ;
 
-    public static final Event TRANSFERBATCH_EVENT = new Event("TransferBatch", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<DynamicArray<Uint256>>() {}, new TypeReference<DynamicArray<Uint256>>() {}));
+    public static final Event TRANSFERBATCH_EVENT = new Event("TransferBatch",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }, new TypeReference<DynamicArray<Uint256>>() {
+            }, new TypeReference<DynamicArray<Uint256>>() {
+            }));
     ;
 
-    public static final Event TRANSFERSINGLE_EVENT = new Event("TransferSingle", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}));
+    public static final Event TRANSFERSINGLE_EVENT = new Event("TransferSingle",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }, new TypeReference<Address>(true) {
+            }, new TypeReference<Uint256>() {
+            }, new TypeReference<Uint256>() {
+            }));
     ;
 
-    public static final Event UPGRADED_EVENT = new Event("Upgraded", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}));
+    public static final Event UPGRADED_EVENT = new Event("Upgraded",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {
+            }));
     ;
 
     @Deprecated
@@ -488,22 +515,24 @@ public class DDC1155 extends Contract {
     }
 
     public RemoteFunctionCall<BigInteger> balanceOf(String owner, BigInteger ddcId) {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_BALANCEOF, 
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_BALANCEOF,
                 Arrays.<Type>asList(new Address(160, owner),
-                new Uint256(ddcId)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+                        new Uint256(ddcId)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteFunctionCall<List> balanceOfBatch(List<String> owners, List<BigInteger> ddcIds) {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_BALANCEOFBATCH, 
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_BALANCEOFBATCH,
                 Arrays.<Type>asList(new DynamicArray<Address>(
-                        Address.class,
-                        org.web3j.abi.Utils.typeMap(owners, Address.class)),
-                new DynamicArray<Uint256>(
-                        Uint256.class,
-                        org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class))),
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Uint256>>() {}));
+                                Address.class,
+                                org.web3j.abi.Utils.typeMap(owners, Address.class)),
+                        new DynamicArray<Uint256>(
+                                Uint256.class,
+                                org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class))),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Uint256>>() {
+                }));
         return new RemoteFunctionCall<List>(function,
                 new Callable<List>() {
                     @Override
@@ -517,34 +546,35 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> burn(String owner, BigInteger ddcId) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_BURN, 
+                FUNC_BURN,
                 Arrays.<Type>asList(new Address(160, owner),
-                new Uint256(ddcId)),
+                        new Uint256(ddcId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> burnBatch(String owner, List<BigInteger> ddcIds) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_BURNBATCH, 
+                FUNC_BURNBATCH,
                 Arrays.<Type>asList(new Address(160, owner),
-                new DynamicArray<Uint256>(
-                        Uint256.class,
-                        org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class))),
+                        new DynamicArray<Uint256>(
+                                Uint256.class,
+                                org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class))),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<String> ddcURI(BigInteger ddcId) {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_DDCURI, 
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_DDCURI,
                 Arrays.<Type>asList(new Uint256(ddcId)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public RemoteFunctionCall<TransactionReceipt> freeze(BigInteger ddcId) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_FREEZE, 
+                FUNC_FREEZE,
                 Arrays.<Type>asList(new Uint256(ddcId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -552,101 +582,103 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> initialize() {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_INITIALIZE, 
-                Arrays.<Type>asList(), 
+                FUNC_INITIALIZE,
+                Arrays.<Type>asList(),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<Boolean> isApprovedForAll(String owner, String operator) {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_ISAPPROVEDFORALL, 
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_ISAPPROVEDFORALL,
                 Arrays.<Type>asList(new Address(160, owner),
-                new Address(160, operator)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
+                        new Address(160, operator)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, Boolean.class);
     }
 
     public RemoteFunctionCall<String> owner() {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_OWNER, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_OWNER,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public RemoteFunctionCall<TransactionReceipt> renounceOwnership() {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_RENOUNCEOWNERSHIP, 
-                Arrays.<Type>asList(), 
+                FUNC_RENOUNCEOWNERSHIP,
+                Arrays.<Type>asList(),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> safeBatchTransferFrom(String from, String to, List<BigInteger> ddcIds, List<BigInteger> amounts, byte[] data) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SAFEBATCHTRANSFERFROM, 
+                FUNC_SAFEBATCHTRANSFERFROM,
                 Arrays.<Type>asList(new Address(160, from),
-                new Address(160, to),
-                new DynamicArray<Uint256>(
-                        Uint256.class,
-                        org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class)),
-                new DynamicArray<Uint256>(
-                        Uint256.class,
-                        org.web3j.abi.Utils.typeMap(amounts, Uint256.class)),
-                new org.web3j.abi.datatypes.DynamicBytes(data)), 
+                        new Address(160, to),
+                        new DynamicArray<Uint256>(
+                                Uint256.class,
+                                org.web3j.abi.Utils.typeMap(ddcIds, Uint256.class)),
+                        new DynamicArray<Uint256>(
+                                Uint256.class,
+                                org.web3j.abi.Utils.typeMap(amounts, Uint256.class)),
+                        new org.web3j.abi.datatypes.DynamicBytes(data)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> safeMint(String to, BigInteger amount, String _ddcURI, byte[] data) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SAFEMINT, 
+                FUNC_SAFEMINT,
                 Arrays.<Type>asList(new Address(160, to),
-                new Uint256(amount),
-                new Utf8String(_ddcURI),
-                new org.web3j.abi.datatypes.DynamicBytes(data)), 
+                        new Uint256(amount),
+                        new Utf8String(_ddcURI),
+                        new org.web3j.abi.datatypes.DynamicBytes(data)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> safeMintBatch(String to, List<BigInteger> amounts, List<String> ddcURIs, byte[] data) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SAFEMINTBATCH, 
+                FUNC_SAFEMINTBATCH,
                 Arrays.<Type>asList(new Address(160, to),
-                new DynamicArray<Uint256>(
-                        Uint256.class,
-                        org.web3j.abi.Utils.typeMap(amounts, Uint256.class)),
-                new DynamicArray<Utf8String>(
-                        Utf8String.class,
-                        org.web3j.abi.Utils.typeMap(ddcURIs, Utf8String.class)),
-                new org.web3j.abi.datatypes.DynamicBytes(data)), 
+                        new DynamicArray<Uint256>(
+                                Uint256.class,
+                                org.web3j.abi.Utils.typeMap(amounts, Uint256.class)),
+                        new DynamicArray<Utf8String>(
+                                Utf8String.class,
+                                org.web3j.abi.Utils.typeMap(ddcURIs, Utf8String.class)),
+                        new org.web3j.abi.datatypes.DynamicBytes(data)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> safeTransferFrom(String from, String to, BigInteger ddcId, BigInteger amount, byte[] data) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SAFETRANSFERFROM, 
+                FUNC_SAFETRANSFERFROM,
                 Arrays.<Type>asList(new Address(160, from),
-                new Address(160, to),
-                new Uint256(ddcId),
-                new Uint256(amount),
-                new org.web3j.abi.datatypes.DynamicBytes(data)), 
+                        new Address(160, to),
+                        new Uint256(ddcId),
+                        new Uint256(amount),
+                        new org.web3j.abi.datatypes.DynamicBytes(data)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> setApprovalForAll(String operator, Boolean approved) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SETAPPROVALFORALL, 
+                FUNC_SETAPPROVALFORALL,
                 Arrays.<Type>asList(new Address(160, operator),
-                new Bool(approved)),
+                        new Bool(approved)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<TransactionReceipt> setAuthorityProxyAddress(String authorityProxyAddress) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SETAUTHORITYPROXYADDRESS, 
+                FUNC_SETAUTHORITYPROXYADDRESS,
                 Arrays.<Type>asList(new Address(160, authorityProxyAddress)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -654,7 +686,7 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> setChargeProxyAddress(String chargeProxyAddress) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SETCHARGEPROXYADDRESS, 
+                FUNC_SETCHARGEPROXYADDRESS,
                 Arrays.<Type>asList(new Address(160, chargeProxyAddress)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -662,24 +694,25 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> setURI(String owner, BigInteger ddcId, String ddcURI_) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_SETURI, 
+                FUNC_SETURI,
                 Arrays.<Type>asList(new Address(160, owner),
-                new Uint256(ddcId),
-                new Utf8String(ddcURI_)),
+                        new Uint256(ddcId),
+                        new Utf8String(ddcURI_)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<Boolean> supportsInterface(byte[] interfaceId) {
-        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_SUPPORTSINTERFACE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes4(interfaceId)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_SUPPORTSINTERFACE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes4(interfaceId)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, Boolean.class);
     }
 
     public RemoteFunctionCall<TransactionReceipt> transferOwnership(String newOwner) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_TRANSFEROWNERSHIP, 
+                FUNC_TRANSFEROWNERSHIP,
                 Arrays.<Type>asList(new Address(160, newOwner)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -687,7 +720,7 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> unFreeze(BigInteger ddcId) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_UNFREEZE, 
+                FUNC_UNFREEZE,
                 Arrays.<Type>asList(new Uint256(ddcId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -695,7 +728,7 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> upgradeTo(String newImplementation) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_UPGRADETO, 
+                FUNC_UPGRADETO,
                 Arrays.<Type>asList(new Address(160, newImplementation)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -703,9 +736,9 @@ public class DDC1155 extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> upgradeToAndCall(String newImplementation, byte[] data) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_UPGRADETOANDCALL, 
+                FUNC_UPGRADETOANDCALL,
                 Arrays.<Type>asList(new Address(160, newImplementation),
-                new org.web3j.abi.datatypes.DynamicBytes(data)), 
+                        new org.web3j.abi.datatypes.DynamicBytes(data)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }

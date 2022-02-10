@@ -2,7 +2,7 @@ package ai.bianjie.ddc.service;
 
 import ai.bianjie.ddc.DDCSdkClient;
 import ai.bianjie.ddc.dto.BlockEventBean;
-import ai.bianjie.ddc.listener.sign;
+import ai.bianjie.ddc.SignEventTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,13 +18,14 @@ class BlockEventServiceTest {
             .setDDC1155Address("0xe5d3b9E7D16E03A4A1060c72b5D1cb7806DD9070")
             .setGasLimit("300000")
             .setGasPrice("10000000")
-            .setSignEventListener(new sign())
+            .setSignEventListener(new SignEventTest())
             .init();
 
     @Test
     void getBlockEvent() throws IOException, InterruptedException, ExecutionException {
         client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("");
+        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
+        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
         BlockEventService blockEventService = new BlockEventService();
         BlockEventBean blockEvent = blockEventService.getBlockEvent(new BigInteger("3058179"));
     }

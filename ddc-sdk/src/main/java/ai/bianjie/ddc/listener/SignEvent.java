@@ -7,6 +7,11 @@ public class SignEvent {
     String sender;
     RawTransaction rawTransaction;
 
+    public SignEvent(String sender, RawTransaction rawTransaction) {
+        this.sender = sender;
+        this.rawTransaction = rawTransaction;
+    }
+
     public String getSender() {
         return sender;
     }

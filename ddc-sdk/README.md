@@ -36,6 +36,8 @@
      client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[project_id]/evmrpc/");
      //设置key
      client.setGatewayApiKey("x-api-key");
+     //设置value
+     client.setGatewayValue([project_key]);
     
     //可单独为每个方法设置gaslimit
     AuthorityService authorityService = client.getAuthorityService(); 

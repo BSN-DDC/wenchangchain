@@ -23,12 +23,12 @@ public class ChargeService extends BaseService {
 
 
     /**
-     * ÔËÓª·½¡¢Æ½Ì¨·½µ÷ÓÃ¸Ã½Ó¿ÚÎªËùÊôÍ¬Ò»·½µÄÍ¬Ò»¼¶±ğÕË»§»òÕßÏÂ¼¶ÕË»§³äÖµ£»
+     * è¿è¥æ–¹ã€å¹³å°æ–¹è°ƒç”¨è¯¥æ¥å£ä¸ºæ‰€å±åŒä¸€æ–¹çš„åŒä¸€çº§åˆ«è´¦æˆ·æˆ–è€…ä¸‹çº§è´¦æˆ·å……å€¼ï¼›
      *
-     * @param sender µ÷ÓÃÕßµØÖ·
-     * @param to     ³äÖµÕË»§µÄµØÖ·
-     * @param amount ³äÖµ½ğ¶î
-     * @return ·µ»Ø½»Ò×¹şÏ£
+     * @param sender è°ƒç”¨è€…åœ°å€
+     * @param to     å……å€¼è´¦æˆ·çš„åœ°å€
+     * @param amount å……å€¼é‡‘é¢
+     * @return è¿”å›äº¤æ˜“å“ˆå¸Œ
      * @throws Exception
      */
     public String recharge(String sender, String to, BigInteger amount) throws Exception {
@@ -53,10 +53,10 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ²éÑ¯Ö¸¶¨ÕË»§µÄÓà¶î¡£
+     * æŸ¥è¯¢æŒ‡å®šè´¦æˆ·çš„ä½™é¢ã€‚
      *
-     * @param accAddr ²éÑ¯µÄÕË»§µØÖ·
-     * @return ·µ»ØÕË»§Ëù¶ÔÓ¦µÄÒµÎñ·ÑÓà¶î
+     * @param accAddr æŸ¥è¯¢çš„è´¦æˆ·åœ°å€
+     * @return è¿”å›è´¦æˆ·æ‰€å¯¹åº”çš„ä¸šåŠ¡è´¹ä½™é¢
      * @throws Exception
      */
     public BigInteger balanceOf(String accAddr) throws Exception {
@@ -73,11 +73,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ²éÑ¯Ö¸¶¨µÄDDCÒµÎñÖ÷Âß¼­ºÏÔ¼µÄ·½·¨Ëù¶ÔÓ¦µÄµ÷ÓÃÒµÎñ·ÑÓÃ¡£
+     * æŸ¥è¯¢æŒ‡å®šçš„DDCä¸šåŠ¡ä¸»é€»è¾‘åˆçº¦çš„æ–¹æ³•æ‰€å¯¹åº”çš„è°ƒç”¨ä¸šåŠ¡è´¹ç”¨ã€‚
      *
-     * @param ddcAddr DDCÒµÎñºÏÔ¼µØÖ·
-     * @param sig     Hex¸ñÊ½µÄºÏÔ¼·½·¨ID
-     * @return ·µ»Ø²éÑ¯µÄDDCºÏÔ¼ÒµÎñ·Ñ
+     * @param ddcAddr DDCä¸šåŠ¡åˆçº¦åœ°å€
+     * @param sig     Hexæ ¼å¼çš„åˆçº¦æ–¹æ³•ID
+     * @return è¿”å›æŸ¥è¯¢çš„DDCåˆçº¦ä¸šåŠ¡è´¹
      * @throws Exception
      */
     public BigInteger queryFee(String ddcAddr, String sig) throws Exception {
@@ -103,11 +103,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ÔËÓª·½µ÷ÓÃÎª×Ô¼ºµÄÕË»§Ôö¼ÓÒµÎñ·Ñ¡£
+     * è¿è¥æ–¹è°ƒç”¨ä¸ºè‡ªå·±çš„è´¦æˆ·å¢åŠ ä¸šåŠ¡è´¹ã€‚
      *
-     * @param sender µ÷ÓÃÕßµØÖ·
-     * @param amount ¶ÔÔËÓª·½ÕË»§½øĞĞ³äÖµµÄÒµÎñ·Ñ
-     * @return ·µ»Ø½»Ò×¹şÏ£
+     * @param sender è°ƒç”¨è€…åœ°å€
+     * @param amount å¯¹è¿è¥æ–¹è´¦æˆ·è¿›è¡Œå……å€¼çš„ä¸šåŠ¡è´¹
+     * @return è¿”å›äº¤æ˜“å“ˆå¸Œ
      * @throws Exception
      */
     public String selfRecharge(String sender, BigInteger amount) throws Exception {
@@ -124,13 +124,13 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ÔËÓª·½µ÷ÓÃ½Ó¿ÚÉèÖÃÖ¸¶¨µÄDDCÖ÷ºÏÔ¼µÄ·½·¨µ÷ÓÃ·ÑÓÃ¡£
+     * è¿è¥æ–¹è°ƒç”¨æ¥å£è®¾ç½®æŒ‡å®šçš„DDCä¸»åˆçº¦çš„æ–¹æ³•è°ƒç”¨è´¹ç”¨ã€‚
      *
-     * @param sender  µ÷ÓÃÕßµØÖ·
-     * @param ddcAddr DDCÒµÎñºÏÔ¼µØÖ·
-     * @param sig     Hex¸ñÊ½µÄºÏÔ¼·½·¨ID
-     * @param amount  ÒµÎñ·ÑÓÃ
-     * @return ·µ»Ø½»Ò×¹şÏ£
+     * @param sender  è°ƒç”¨è€…åœ°å€
+     * @param ddcAddr DDCä¸šåŠ¡åˆçº¦åœ°å€
+     * @param sig     Hexæ ¼å¼çš„åˆçº¦æ–¹æ³•ID
+     * @param amount  ä¸šåŠ¡è´¹ç”¨
+     * @return è¿”å›äº¤æ˜“å“ˆå¸Œ
      * @throws Exception
      */
     public String setFee(String sender, String ddcAddr, String sig, BigInteger amount) throws Exception {
@@ -164,12 +164,12 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ÔËÓª·½µ÷ÓÃ½Ó¿ÚÉ¾³ıÖ¸¶¨µÄDDCÖ÷ºÏÔ¼µÄ·½·¨µ÷ÓÃ·ÑÓÃ¡£
+     * è¿è¥æ–¹è°ƒç”¨æ¥å£åˆ é™¤æŒ‡å®šçš„DDCä¸»åˆçº¦çš„æ–¹æ³•è°ƒç”¨è´¹ç”¨ã€‚
      *
-     * @param sender  µ÷ÓÃÕßµØÖ·
-     * @param ddcAddr DDCÒµÎñºÏÔ¼µØÖ·
-     * @param sig     Hex¸ñÊ½µÄºÏÔ¼·½·¨ID
-     * @return ·µ»Ø½»Ò×¹şÏ£
+     * @param sender  è°ƒç”¨è€…åœ°å€
+     * @param ddcAddr DDCä¸šåŠ¡åˆçº¦åœ°å€
+     * @param sig     Hexæ ¼å¼çš„åˆçº¦æ–¹æ³•ID
+     * @return è¿”å›äº¤æ˜“å“ˆå¸Œ
      * @throws Exception
      */
     public String delFee(String sender, String ddcAddr, String sig) throws Exception {
@@ -200,11 +200,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * ÔËÓª·½µ÷ÓÃ¸Ã½Ó¿ÚÉ¾³ıÖ¸¶¨µÄDDCÒµÎñÖ÷Âß¼­ºÏÔ¼ÊÚÈ¨¡£
+     * è¿è¥æ–¹è°ƒç”¨è¯¥æ¥å£åˆ é™¤æŒ‡å®šçš„DDCä¸šåŠ¡ä¸»é€»è¾‘åˆçº¦æˆæƒã€‚
      *
-     * @param sender  µ÷ÓÃÕßµØÖ·'
-     * @param ddcAddr DDCÒµÎñºÏÔ¼µØÖ·
-     * @return ·µ»Ø½»Ò×¹şÏ£
+     * @param sender  è°ƒç”¨è€…åœ°å€'
+     * @param ddcAddr DDCä¸šåŠ¡åˆçº¦åœ°å€
+     * @return è¿”å›äº¤æ˜“å“ˆå¸Œ
      * @throws Exception
      */
     public String delDDC(String sender, String ddcAddr) throws Exception {

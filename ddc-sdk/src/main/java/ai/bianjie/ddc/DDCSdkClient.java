@@ -8,35 +8,16 @@ import ai.bianjie.ddc.listener.SignEventListener;
 import ai.bianjie.ddc.service.*;
 
 public class DDCSdkClient {
-    private String opbGateWebAddress;
-    private String gasPrice;
-    private String gasLimit;
-    private String ddc721Address;
-    private String ddc1155Address;
-    private String authorityLogicAddress;
-    private String chargeLogicAddress;
     private SignEventListener signEventListener;
-    private String headerKey;
-    private String headerValue;
 
     /**
      * SDK 初始化方法
      */
     private DDCSdkClient(Builder builder) {
-        this.opbGateWebAddress = builder.opbGateWebAddress;
-        this.gasPrice = builder.gasPrice;
-        this.gasLimit = builder.gasLimit;
-        this.ddc721Address = builder.ddc721Address;
-        this.ddc1155Address = builder.ddc1155Address;
-        this.authorityLogicAddress = builder.authorityLogicAddress;
-        this.chargeLogicAddress = builder.chargeLogicAddress;
         this.signEventListener = builder.signEventListener;
-        this.headerKey = builder.headerKey;
-        this.headerValue = builder.headerValue;
     }
 
     public static class Builder {
-        private String opbGateWebAddress;
         private String gasPrice;
         private String gasLimit;
         private String ddc721Address;
@@ -44,9 +25,8 @@ public class DDCSdkClient {
         private String authorityLogicAddress;
         private String chargeLogicAddress;
         private SignEventListener signEventListener;
-        private String headerKey;
-        private String headerValue;
-        public Builder(){
+
+        public Builder() {
         }
 
 
@@ -89,29 +69,34 @@ public class DDCSdkClient {
         }
 
         public DDCSdkClient init() {
-            ConfigCache.initCache(opbGateWebAddress, headerKey, headerValue, gasPrice, gasLimit, ddc721Address, ddc1155Address, authorityLogicAddress, chargeLogicAddress);
+            ConfigCache.initCache(gasPrice, gasLimit, ddc721Address, ddc1155Address, authorityLogicAddress, chargeLogicAddress);
             return new DDCSdkClient(this);
         }
     }
 
-    public Boolean setGatewayUrl(String gatewayUrl){
-        if(gatewayUrl.isEmpty()){
+    public Boolean setGatewayUrl(String gatewayUrl) {
+        if (gatewayUrl.isEmpty()) {
             return false;
         }
         ConfigCache.get().setOpbGatewayAddress(gatewayUrl);
         return true;
     }
 
-    public Boolean setGatewayApiKey(String apiKey){
-        if(apiKey.isEmpty()){
+    public Boolean setGatewayApiKey(String apiKey) {
+        if (apiKey.isEmpty()) {
             return false;
         }
         ConfigCache.get().setHeaderKey(apiKey);
         return true;
     }
 
-
-
+    public Boolean setGatewayApiValue(String apiValue) {
+        if (apiValue.isEmpty()) {
+            return false;
+        }
+        ConfigCache.get().setHeaderValue(apiValue);
+        return true;
+    }
 
     /**
      * 获取权限管理服务的示例

@@ -14,16 +14,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 public class Web3jUtils {
+    private Web3jUtils() {
+    }
+
     private static ECKeyPair ecKeyPair;
 
     static {
         try {
             ecKeyPair = Keys.createEcKeyPair();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException e) {
             e.printStackTrace();
         }
     }
@@ -46,8 +45,8 @@ public class Web3jUtils {
 
     public static Web3j getWeb3j() {
         HttpService httpService = new HttpService(ConfigCache.get().getOpbGatewayAddress());
-        if(!Strings.isEmpty(ConfigCache.get().getHeaderKey())&&!Strings.isEmpty(ConfigCache.get().getHeaderValue())){
-            httpService.addHeader(ConfigCache.get().getHeaderKey(),ConfigCache.get().getHeaderValue());
+        if (!Strings.isEmpty(ConfigCache.get().getHeaderKey()) && !Strings.isEmpty(ConfigCache.get().getHeaderValue())) {
+            httpService.addHeader(ConfigCache.get().getHeaderKey(), ConfigCache.get().getHeaderValue());
         }
         return Web3j.build(httpService);
     }

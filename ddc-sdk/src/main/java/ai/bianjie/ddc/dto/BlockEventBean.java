@@ -3,7 +3,6 @@ package ai.bianjie.ddc.dto;
 import org.web3j.protocol.core.methods.response.BaseEventResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BlockEventBean {
     private ArrayList<BaseEventResponse> list;

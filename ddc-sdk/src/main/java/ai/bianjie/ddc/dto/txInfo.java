@@ -1,10 +1,11 @@
 package ai.bianjie.ddc.dto;
 
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
-public class txInfo {
+public class TxInfo {
 
     private String hash;
     private String nonce;
@@ -24,26 +25,27 @@ public class txInfo {
     private String s;
     private long v;
 
-    public txInfo() {}
+    public TxInfo() {
+    }
 
-    public txInfo(String hash, String nonce, String blockHash, String blockNumber, String transactionIndex, String from, String to, String value, String gas, String gasPrice, String input, String creates, String publicKey, String raw, String r, String s, long v) {
-        this.hash = hash;
-        this.nonce = nonce;
-        this.blockHash = blockHash;
-        this.blockNumber = blockNumber;
-        this.transactionIndex = transactionIndex;
-        this.from = from;
-        this.to = to;
-        this.value = value;
-        this.gasPrice = gasPrice;
-        this.gas = gas;
-        this.input = input;
-        this.creates = creates;
-        this.publicKey = publicKey;
-        this.raw = raw;
-        this.r = r;
-        this.s = s;
-        this.v = v;
+    public TxInfo(Transaction transaction) {
+        this.hash = transaction.getHash();
+        this.nonce = transaction.getNonceRaw();
+        this.blockHash = transaction.getBlockHash();
+        this.blockNumber = transaction.getBlockNumberRaw();
+        this.transactionIndex = transaction.getTransactionIndexRaw();
+        this.from = transaction.getFrom();
+        this.to = transaction.getTo();
+        this.value = transaction.getValueRaw();
+        this.gasPrice = transaction.getGasPriceRaw();
+        this.gas = transaction.getGasRaw();
+        this.input = transaction.getInput();
+        this.creates = transaction.getCreates();
+        this.publicKey = transaction.getPublicKey();
+        this.raw = transaction.getRaw();
+        this.r = transaction.getR();
+        this.s = transaction.getS();
+        this.v = transaction.getV();
     }
 
     public String getHash() {
@@ -204,8 +206,7 @@ public class txInfo {
 
     public Long getChainId() {
         if (this.v != 27L && this.v != 28L) {
-            Long chainId = (this.v - 35L) / 2L;
-            return chainId;
+            return (this.v - 35L) / 2L;
         } else {
             return null;
         }

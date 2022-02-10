@@ -23,38 +23,6 @@ public class AuthorityService extends BaseService {
     }
 
     /**
-     * 平台方可以通过调用该方法进行DDC账户信息的创建，上级角色可进行下级角色账户的操作，平台方通过该方法只能添加终端账户。
-     *
-     * @param sender 调用者地址
-     * @param account DDC链账户地址
-     * @param accName DDC账户对应的账户名称
-     * @param accDID  DDC账户对应的DID信息（普通用户可为空）
-     * @return 返回交易哈希
-     * @throws Exception
-     */
-//    public String addAccount(String sender,String account, String accName, String accDID) throws Exception {
-//        if (!AddressUtils.isValidAddress(sender)) {
-//            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-//        }
-//
-//        if (Strings.isEmpty(account)) {
-//            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
-//        }
-//
-//        if (!AddressUtils.isValidAddress(account)) {
-//            throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-//        }
-//
-//        if (Strings.isEmpty(accName)) {
-//            throw new DDCException(ErrorMessage.ACCOUNT_NAME_IS_EMPTY);
-//        }
-//
-//        encodedFunction = authority.addAccountByPlatform(account, accName, accDID).encodeFunctionCall();
-//        return signAndSend(authority, "", encodedFunction, signEventListener,sender).getTransactionHash();
-//    }
-
-
-    /**
      * 运营方可以通过调用该方法直接对平台方或平台方的终端用户进行创建。
      *
      * @param sender    调用者地址
@@ -90,6 +58,7 @@ public class AuthorityService extends BaseService {
      * 删除账户
      *
      * @param account DDC链账户地址
+     * @param sender  此方法暂不使用
      * @return 返回交易哈希
      * @throws Exception
      */
@@ -114,7 +83,7 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
         Tuple7<String, String, BigInteger, String, BigInteger, BigInteger, String> res = Web3jUtils.getAuthority().getAccount(account).send();
-        return new AccountInfo(res.getValue1(), res.getValue2(), res.getValue3().toString(), res.getValue4(), res.getValue5().toString(), res.getValue6().toString(), res.getValue7());
+        return new AccountInfo(res.component1(), res.component2(), res.component3().toString(), res.component4(), res.component5().toString(), res.component6().toString(), res.component7());
     }
 
     /**
@@ -179,7 +148,7 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        encodedFunction = authority.crossPlatformApproval(from,to,approved).encodeFunctionCall();
+        encodedFunction = authority.crossPlatformApproval(from, to, approved).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_CROSSPLATFORMAPPROVAL, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
