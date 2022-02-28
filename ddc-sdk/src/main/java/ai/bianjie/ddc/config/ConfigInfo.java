@@ -17,7 +17,7 @@ public class ConfigInfo {
 
     private String headerValue;
 
-    private String gasPrice = "10000000";
+    private String gasPrice = "1";
 
     private String gasLimit = "300000";
 

@@ -22,15 +22,15 @@
     
     //创建客户端
     //也可设置相关参数值 gasprice，gaslimit，相关合约地址
-    //irita 中 gaslimit 设置值即消耗值，扣费换算：1 uirita = 1e12 wei
-    //建议 gaslimit 设置为300000以上，gasprice 设置为1000000000000以上
+    //irita 中 gaslimit 设置值即消耗值
+    //建议 gaslimit 设置为300000以上，gasprice 设置为1以上
    DDCSdkClient client = new DDCSdkClient.Builder()
                 .setAuthorityLogicAddress("权限合约地址")
                 .setChargeLogicAddress("充值合约地址")
                 .setDDC721Address("ddc721合约地址")
                 .setDDC1155Address("ddc1155合约地址")
                 .setGasLimit("300000")
-                .setGasPrice("1000000000000")
+                .setGasPrice("1")
                 .setSignEventListener(signEventListener)
                 .init();
      //设置网关

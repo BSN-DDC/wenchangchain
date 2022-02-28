@@ -18,7 +18,7 @@ class DDC1155ServiceTest {
             .setDDC721Address("0x3B09b7A00271C5d9AE84593850dE3A526b8BF96e")
             .setDDC1155Address("0xe5d3b9E7D16E03A4A1060c72b5D1cb7806DD9070")
             .setGasLimit("300000")
-            .setGasPrice("10000000")
+            .setGasPrice("1")
             .setSignEventListener(new SignEventTest())
             .init();
 
