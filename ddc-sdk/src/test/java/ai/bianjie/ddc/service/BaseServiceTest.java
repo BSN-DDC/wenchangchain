@@ -55,11 +55,11 @@ class BaseServiceTest {
     }
 
     @Test
-    void getTransByStatus() throws ExecutionException, InterruptedException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
+    void getTransByStatus() throws IOException {
+        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/808fb54ccd604ddd9ebfa4519d112057/evmrpc");
         client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
         client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
-        Boolean state = baseService.getTransByStatus("0x79bc4b5128e4b663876a3d4b097bd160fa512c1c5e93a615df45a86ccf0422ad");
+        Boolean state = baseService.getTransByStatus("0x7cccfb8c469f59784fc195df21ab31c854f9b320850b22180570e3fec2cb13d4");
         System.out.println("--------------------------------------" + state);
     }
 

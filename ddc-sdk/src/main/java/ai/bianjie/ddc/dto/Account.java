@@ -18,12 +18,12 @@ public class Account {
         this.keyseed = keyseed;
     }
 
-    public String getPubulicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 
-    public void setPubulicKey(String pubulicKey) {
-        this.publicKey = pubulicKey;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public String getPrivateKey() {
