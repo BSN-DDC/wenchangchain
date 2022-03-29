@@ -10,8 +10,10 @@ import ai.bianjie.ddc.util.Bech32Utils;
 import ai.bianjie.ddc.util.CommonUtils;
 import ai.bianjie.ddc.util.GasProvider;
 import ai.bianjie.ddc.util.Web3jUtils;
+import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.bitcoinj.crypto.*;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.MnemonicUtils;
@@ -22,10 +24,11 @@ import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.tx.Contract;
 import org.web3j.utils.Strings;
+import sun.security.provider.SecureRandom;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.web3j.crypto.Hash.sha256;
@@ -33,7 +36,9 @@ import static org.web3j.crypto.Hash.sha256;
 @Slf4j
 public class BaseService {
     protected SignEventListener signEventListener;
-
+    private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH =
+            ImmutableList.of(new ChildNumber(44, true), new ChildNumber(60, true),
+                    ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
     /**
      * 获取区块信息
      *
@@ -83,11 +88,10 @@ public class BaseService {
      *
      * @param hash 交易哈希
      * @return 交易状态
-     * @throws ExecutionException
+     * @throws IOException
      */
-    public Boolean getTransByStatus(String hash) throws ExecutionException, InterruptedException {
-        TransactionReceipt txReceipt = Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).sendAsync().get().getTransactionReceipt().get();
-        return !Strings.isEmpty(txReceipt.toString());
+    public Boolean getTransByStatus(String hash) throws IOException {
+        return Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).send().getTransactionReceipt().get().isStatusOK();
     }
 
     /**
@@ -149,15 +153,36 @@ public class BaseService {
      * @return 返回 Account
      */
     public Account createAccountHex() {
-        byte[] initialEntropy = new byte[16];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(initialEntropy);
-        String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
-        ECKeyPair keyPair = ECKeyPair.create(sha256(seed));
-        String addr = Keys.getAddress(keyPair);
+        //        byte[] initialEntropy = new byte[16];
+//        SecureRandom secureRandom = new SecureRandom();
+//        secureRandom.nextBytes(initialEntropy);
+//        String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
+//        byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
+//        ECKeyPair keyPair = ECKeyPair.create(sha256(seed));
+//        String addr = Keys.getAddress(keyPair);
+        sun.security.provider.SecureRandom secureRandom = new SecureRandom();
+        byte[] entropy = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
+        secureRandom.engineNextBytes(entropy);
+        List<String> str = null;
+        try {
+            str = MnemonicCode.INSTANCE.toMnemonic(entropy);
+        } catch (MnemonicException.MnemonicLengthException e) {
+            e.printStackTrace();
+        }
 
-        return new Account(mnemonic, keyPair.getPublicKey().toString(16), keyPair.getPrivateKey().toString(16), addr);
+        // seed
+        byte[] seed = MnemonicCode.toSeed(str, "");
+
+        // master key
+        DeterministicKey masterPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
+        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(masterPrivateKey);
+
+        // child key
+        DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false, true, new ChildNumber(0));
+        byte[] bytes = deterministicKey.getPrivKeyBytes();
+        ECKeyPair keyPair = ECKeyPair.create(bytes);
+        String addr = Keys.getAddress(keyPair.getPublicKey());
+        return new Account(str.toString(), keyPair.getPublicKey().toString(16), keyPair.getPrivateKey().toString(16), addr);
     }
 
     /**
