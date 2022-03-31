@@ -16,7 +16,6 @@ import org.bitcoinj.crypto.*;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
-import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -31,14 +30,15 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static org.web3j.crypto.Hash.sha256;
-
 @Slf4j
 public class BaseService {
-    protected SignEventListener signEventListener;
     private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH =
             ImmutableList.of(new ChildNumber(44, true), new ChildNumber(60, true),
                     ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
+
+    protected SignEventListener signEventListener;
+    protected Web3j baseSvc = Web3jUtils.getWeb3j();
+
     /**
      * 获取区块信息
      *
@@ -47,7 +47,7 @@ public class BaseService {
      * @throws IOException
      */
     public EthBlock.Block getBlockByNumber(BigInteger blockNumber) throws IOException {
-        return Web3jUtils.getWeb3j().ethGetBlockByNumber(CommonUtils.getDefaultBlockParamter(blockNumber.toString()), true).send().getBlock();
+        return baseSvc.ethGetBlockByNumber(CommonUtils.getDefaultBlockParamter(blockNumber.toString()), true).send().getBlock();
     }
 
     /**
@@ -57,7 +57,7 @@ public class BaseService {
      * @throws IOException
      */
     public BigInteger getLatestBlockNumber() throws IOException {
-        return Web3jUtils.getWeb3j().ethGetBlockByNumber(DefaultBlockParameterName.LATEST, true).send().getBlock().getNumber();
+        return baseSvc.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, true).send().getBlock().getNumber();
     }
 
     /**
@@ -68,7 +68,7 @@ public class BaseService {
      * @throws InterruptedException
      */
     public TransactionReceipt getTransReceipt(String hash) throws InterruptedException, ExecutionException {
-        return Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).sendAsync().get().getTransactionReceipt().get();
+        return baseSvc.ethGetTransactionReceipt(hash).sendAsync().get().getTransactionReceipt().get();
     }
 
     /**
@@ -79,7 +79,7 @@ public class BaseService {
      * @throws IOException
      */
     public TxInfo getTransByHash(String hash) throws IOException {
-        Transaction transaction = Web3jUtils.getWeb3j().ethGetTransactionByHash(hash).send().getTransaction().get();
+        Transaction transaction = baseSvc.ethGetTransactionByHash(hash).send().getTransaction().get();
         return new TxInfo(transaction);
     }
 
@@ -91,7 +91,7 @@ public class BaseService {
      * @throws IOException
      */
     public Boolean getTransByStatus(String hash) throws IOException {
-        return Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).send().getTransactionReceipt().get().isStatusOK();
+        return baseSvc.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get().isStatusOK();
     }
 
     /**
@@ -115,7 +115,6 @@ public class BaseService {
      */
     public EthSendTransaction signAndSend(Contract contract, String functionName, String encodedFunction, SignEventListener signEventListener, String sender) throws ExecutionException, InterruptedException {
 
-        Web3j web3j = Web3jUtils.getWeb3j();
         GasProvider gasProvider = new GasProvider();
 
         BigInteger gasPrice = gasProvider.getGasPrice();
@@ -125,23 +124,23 @@ public class BaseService {
         String contractAddr = contract.getContractAddress();
 
         // 获取调用者的交易笔数
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(sender, DefaultBlockParameterName.LATEST).sendAsync().get();
+        EthGetTransactionCount ethGetTransactionCount = baseSvc.ethGetTransactionCount(sender, DefaultBlockParameterName.LATEST).sendAsync().get();
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 
         // 生成待签名的交易
         RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, gasLimit, contractAddr, encodedFunction);
 
-        SignEvent signEvent = new SignEvent(sender,rawTransaction);
+        SignEvent signEvent = new SignEvent(sender, rawTransaction);
 
         // 调用签名方法，获取签名后的hexString
         String signedMessage = signEventListener.signEvent(signEvent);
 
         // 向链上发送交易
-        EthSendTransaction sendTransaction = web3j.ethSendRawTransaction(signedMessage).sendAsync().get();
+        EthSendTransaction sendTransaction = baseSvc.ethSendRawTransaction(signedMessage).sendAsync().get();
         // 捕获链上返回的异常
         Response.Error error = sendTransaction.getError();
-        if(error!=null){
-            throw new DDCException(error.getCode(),error.getMessage());
+        if (error != null) {
+            throw new DDCException(error.getCode(), error.getMessage());
         }
         // 返回交易结果
         return sendTransaction;
@@ -153,14 +152,7 @@ public class BaseService {
      * @return 返回 Account
      */
     public Account createAccountHex() {
-        //        byte[] initialEntropy = new byte[16];
-//        SecureRandom secureRandom = new SecureRandom();
-//        secureRandom.nextBytes(initialEntropy);
-//        String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-//        byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
-//        ECKeyPair keyPair = ECKeyPair.create(sha256(seed));
-//        String addr = Keys.getAddress(keyPair);
-        sun.security.provider.SecureRandom secureRandom = new SecureRandom();
+        SecureRandom secureRandom = new SecureRandom();
         byte[] entropy = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
         secureRandom.engineNextBytes(entropy);
         List<String> str = null;
@@ -169,15 +161,9 @@ public class BaseService {
         } catch (MnemonicException.MnemonicLengthException e) {
             e.printStackTrace();
         }
-
-        // seed
         byte[] seed = MnemonicCode.toSeed(str, "");
-
-        // master key
         DeterministicKey masterPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
         DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(masterPrivateKey);
-
-        // child key
         DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false, true, new ChildNumber(0));
         byte[] bytes = deterministicKey.getPrivKeyBytes();
         ECKeyPair keyPair = ECKeyPair.create(bytes);
