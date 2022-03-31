@@ -14,6 +14,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 public class Web3jUtils {
+    private static Authority authority;
+    private static Charge charge;
+    private static DDC721 ddc721;
+    private static DDC1155 ddc1155;
+    private static Web3j web3j;
+
     private Web3jUtils() {
     }
 
@@ -28,26 +34,46 @@ public class Web3jUtils {
     }
 
     public static Authority getAuthority() {
-        return Authority.load(ConfigCache.get().getAuthorityLogicAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        if (authority != null) {
+            return authority;
+        }
+        authority = Authority.load(ConfigCache.get().getAuthorityLogicAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        return authority;
     }
 
     public static Charge getCharge() {
-        return Charge.load(ConfigCache.get().getChargeLogicAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        if (charge != null) {
+            return charge;
+        }
+        charge = Charge.load(ConfigCache.get().getChargeLogicAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        return charge;
     }
 
     public static DDC1155 getDDC1155() {
-        return DDC1155.load(ConfigCache.get().getDdc1155Address(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        if (ddc1155 != null) {
+            return ddc1155;
+        }
+        ddc1155 = DDC1155.load(ConfigCache.get().getDdc1155Address(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        return ddc1155;
     }
 
     public static DDC721 getDDC721() {
-        return DDC721.load(ConfigCache.get().getDdc721Address(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        if (ddc721 != null) {
+            return  ddc721;
+        }
+        ddc721 = DDC721.load(ConfigCache.get().getDdc721Address(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        return ddc721;
     }
 
     public static Web3j getWeb3j() {
+        if (web3j != null) {
+            return web3j;
+        }
         HttpService httpService = new HttpService(ConfigCache.get().getOpbGatewayAddress());
         if (!Strings.isEmpty(ConfigCache.get().getHeaderKey()) && !Strings.isEmpty(ConfigCache.get().getHeaderValue())) {
             httpService.addHeader(ConfigCache.get().getHeaderKey(), ConfigCache.get().getHeaderValue());
         }
-        return Web3j.build(httpService);
+        web3j = Web3j.build(httpService);
+        return web3j;
     }
 }
