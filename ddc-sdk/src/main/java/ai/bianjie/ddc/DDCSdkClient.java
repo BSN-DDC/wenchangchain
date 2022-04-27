@@ -6,6 +6,7 @@ import ai.bianjie.ddc.constant.ErrorMessage;
 import ai.bianjie.ddc.exception.DDCException;
 import ai.bianjie.ddc.listener.SignEventListener;
 import ai.bianjie.ddc.service.*;
+import ai.bianjie.ddc.util.Web3jUtils;
 
 public class DDCSdkClient {
     private SignEventListener signEventListener;
@@ -26,8 +27,6 @@ public class DDCSdkClient {
         private String chargeLogicAddress;
         private SignEventListener signEventListener;
 
-        public Builder() {
-        }
 
 
         public Builder setGasPrice(String gasPrice) {
@@ -79,6 +78,7 @@ public class DDCSdkClient {
             return false;
         }
         ConfigCache.get().setOpbGatewayAddress(gatewayUrl);
+        Web3jUtils.reset();
         return true;
     }
 
@@ -87,6 +87,7 @@ public class DDCSdkClient {
             return false;
         }
         ConfigCache.get().setHeaderKey(apiKey);
+        Web3jUtils.reset();
         return true;
     }
 
@@ -95,6 +96,7 @@ public class DDCSdkClient {
             return false;
         }
         ConfigCache.get().setHeaderValue(apiValue);
+        Web3jUtils.reset();
         return true;
     }
 
