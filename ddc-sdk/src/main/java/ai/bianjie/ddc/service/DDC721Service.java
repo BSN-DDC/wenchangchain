@@ -120,7 +120,7 @@ public class DDC721Service extends BaseService {
      * DDC授权查询
      * 运营方、平台方或终端用户都可以通过调用该方法查询DDC的授权情况。
      *
-     * @param ddcId   DDC唯一标识
+     * @param ddcId DDC唯一标识
      * @return 授权的账户
      * @throws Exception Exception
      */

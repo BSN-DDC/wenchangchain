@@ -29,11 +29,6 @@ import java.util.List;
 @Slf4j
 public class BlockEventService extends BaseService {
 
-    private Authority authority = Web3jUtils.getAuthority();
-    private Charge charge = Web3jUtils.getCharge();
-    private DDC721 ddc721 = Web3jUtils.getDDC721();
-    private DDC1155 ddc1155 = Web3jUtils.getDDC1155();
-
     /**
      * 获取区块事件并解析
      * 1. 根据块高获取区块信息
@@ -49,6 +44,10 @@ public class BlockEventService extends BaseService {
         // 1. 获取区块信息
         EthBlock.Block blockInfo = getBlockByNumber(blockNumber);
 
+        if (blockInfo == null) {
+            throw new DDCException(400, "cannot get blockInfo by blockNumber:" + blockNumber);
+        }
+
         List<EthBlock.TransactionResult> txs = blockInfo.getTransactions();
 
         // 2. 获取交易
@@ -61,7 +60,7 @@ public class BlockEventService extends BaseService {
                 int i = 0;
                 while (ok) {
                     if (i >= 3) {
-                        throw new DDCException(400,"cannot get recepit by hash:" + hash);
+                        throw new DDCException(400, "cannot get receipt by hash:" + hash);
                     }
                     try {
                         arr = analyzeEventsByTxHash(hash);
@@ -90,6 +89,7 @@ public class BlockEventService extends BaseService {
                 continue;
             }
             if (ConfigCache.get().getAuthorityLogicAddress().equalsIgnoreCase(log.getAddress())) {
+                Authority authority = Web3jUtils.getAuthority();
                 if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.ADDACCOUNT_EVENT))) {
                     list.addAll(authority.getAddAccountEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.UPDATEACCOUNTSTATE_EVENT))) {
@@ -98,6 +98,7 @@ public class BlockEventService extends BaseService {
                     list.addAll(authority.getAdminChangedEvents(receipt));
                 }
             } else if (ConfigCache.get().getChargeLogicAddress().equalsIgnoreCase(log.getAddress())) {
+                Charge charge = Web3jUtils.getCharge();
                 if (log.getTopics().get(0).equals(EventEncoder.encode(Charge.RECHARGE_EVENT))) {
                     list.addAll(charge.getRechargeEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Charge.SETFEE_EVENT))) {
@@ -110,7 +111,7 @@ public class BlockEventService extends BaseService {
                     list.addAll(charge.getDelFeeEvents(receipt));
                 }
             } else if (ConfigCache.get().getDdc721Address().equalsIgnoreCase(log.getAddress())) {
-
+                DDC721 ddc721 = Web3jUtils.getDDC721();
                 if (log.getTopics().get(0).equals(EventEncoder.encode(DDC721.TRANSFER_EVENT))) {
                     list.addAll(ddc721.getTransferEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(DDC721.ENTERBLACKLIST_EVENT))) {
@@ -121,7 +122,7 @@ public class BlockEventService extends BaseService {
                     list.addAll(ddc721.getSetURIEvents(receipt));
                 }
             } else if (ConfigCache.get().getDdc1155Address().equalsIgnoreCase(log.getAddress())) {
-
+                DDC1155 ddc1155 = Web3jUtils.getDDC1155();
                 if (log.getTopics().get(0).equals(EventEncoder.encode(DDC1155.TRANSFERBATCH_EVENT))) {
                     list.addAll(ddc1155.getTransferBatchEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(DDC1155.TRANSFERSINGLE_EVENT))) {

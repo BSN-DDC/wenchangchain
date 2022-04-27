@@ -16,6 +16,7 @@ import org.bitcoinj.crypto.*;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
+import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -30,6 +31,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static org.web3j.crypto.Hash.sha256;
+
 @Slf4j
 public class BaseService {
     private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH =
@@ -37,7 +40,6 @@ public class BaseService {
                     ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
 
     protected SignEventListener signEventListener;
-    protected Web3j baseSvc = Web3jUtils.getWeb3j();
 
     /**
      * 获取区块信息
@@ -47,7 +49,7 @@ public class BaseService {
      * @throws IOException
      */
     public EthBlock.Block getBlockByNumber(BigInteger blockNumber) throws IOException {
-        return baseSvc.ethGetBlockByNumber(CommonUtils.getDefaultBlockParamter(blockNumber.toString()), true).send().getBlock();
+        return Web3jUtils.getWeb3j().ethGetBlockByNumber(CommonUtils.getDefaultBlockParamter(blockNumber.toString()), true).send().getBlock();
     }
 
     /**
@@ -57,7 +59,7 @@ public class BaseService {
      * @throws IOException
      */
     public BigInteger getLatestBlockNumber() throws IOException {
-        return baseSvc.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, true).send().getBlock().getNumber();
+        return Web3jUtils.getWeb3j().ethGetBlockByNumber(DefaultBlockParameterName.LATEST, true).send().getBlock().getNumber();
     }
 
     /**
@@ -68,7 +70,7 @@ public class BaseService {
      * @throws InterruptedException
      */
     public TransactionReceipt getTransReceipt(String hash) throws InterruptedException, ExecutionException {
-        return baseSvc.ethGetTransactionReceipt(hash).sendAsync().get().getTransactionReceipt().get();
+        return Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).sendAsync().get().getTransactionReceipt().get();
     }
 
     /**
@@ -79,7 +81,7 @@ public class BaseService {
      * @throws IOException
      */
     public TxInfo getTransByHash(String hash) throws IOException {
-        Transaction transaction = baseSvc.ethGetTransactionByHash(hash).send().getTransaction().get();
+        Transaction transaction = Web3jUtils.getWeb3j().ethGetTransactionByHash(hash).send().getTransaction().get();
         return new TxInfo(transaction);
     }
 
@@ -91,7 +93,7 @@ public class BaseService {
      * @throws IOException
      */
     public Boolean getTransByStatus(String hash) throws IOException {
-        return baseSvc.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get().isStatusOK();
+        return Web3jUtils.getWeb3j().ethGetTransactionReceipt(hash).send().getTransactionReceipt().get().isStatusOK();
     }
 
     /**
@@ -115,6 +117,7 @@ public class BaseService {
      */
     public EthSendTransaction signAndSend(Contract contract, String functionName, String encodedFunction, SignEventListener signEventListener, String sender) throws ExecutionException, InterruptedException {
 
+        Web3j web3j = Web3jUtils.getWeb3j();
         GasProvider gasProvider = new GasProvider();
 
         BigInteger gasPrice = gasProvider.getGasPrice();
@@ -124,7 +127,7 @@ public class BaseService {
         String contractAddr = contract.getContractAddress();
 
         // 获取调用者的交易笔数
-        EthGetTransactionCount ethGetTransactionCount = baseSvc.ethGetTransactionCount(sender, DefaultBlockParameterName.LATEST).sendAsync().get();
+        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(sender, DefaultBlockParameterName.PENDING).sendAsync().get();
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 
         // 生成待签名的交易
@@ -136,7 +139,7 @@ public class BaseService {
         String signedMessage = signEventListener.signEvent(signEvent);
 
         // 向链上发送交易
-        EthSendTransaction sendTransaction = baseSvc.ethSendRawTransaction(signedMessage).sendAsync().get();
+        EthSendTransaction sendTransaction = web3j.ethSendRawTransaction(signedMessage).sendAsync().get();
         // 捕获链上返回的异常
         Response.Error error = sendTransaction.getError();
         if (error != null) {
@@ -152,7 +155,7 @@ public class BaseService {
      * @return 返回 Account
      */
     public Account createAccountHex() {
-        SecureRandom secureRandom = new SecureRandom();
+        sun.security.provider.SecureRandom secureRandom = new SecureRandom();
         byte[] entropy = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
         secureRandom.engineNextBytes(entropy);
         List<String> str = null;
