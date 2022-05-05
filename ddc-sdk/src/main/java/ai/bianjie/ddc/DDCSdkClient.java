@@ -28,7 +28,6 @@ public class DDCSdkClient {
         private SignEventListener signEventListener;
 
 
-
         public Builder setGasPrice(String gasPrice) {
             this.gasPrice = gasPrice;
             return this;
@@ -96,6 +95,14 @@ public class DDCSdkClient {
             return false;
         }
         ConfigCache.get().setHeaderValue(apiValue);
+        Web3jUtils.reset();
+        return true;
+    }
+    public Boolean setConnectTimeout(long timeout) {
+        if (timeout==0) {
+            return false;
+        }
+        ConfigCache.get().setConnectTimeout(timeout);
         Web3jUtils.reset();
         return true;
     }

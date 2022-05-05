@@ -15,7 +15,6 @@ import java.math.BigInteger;
 
 public class AuthorityService extends BaseService {
     private Authority authority;
-    private String encodedFunction;
 
     public AuthorityService(SignEventListener signEventListener) {
         super.signEventListener = signEventListener;
@@ -50,7 +49,7 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_NAME_IS_EMPTY);
         }
 
-        encodedFunction = authority.addAccountByOperator(account, accName, accDID, leaderDID).encodeFunctionCall();
+        String encodedFunction = authority.addAccountByOperator(account, accName, accDID, leaderDID).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_ADDACCOUNTBYOPERATOR, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
@@ -113,7 +112,7 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_STASTUS_IS_EMPTY);
         }
 
-        encodedFunction = authority.updateAccountState(account, state, changePlatformState).encodeFunctionCall();
+        String encodedFunction = authority.updateAccountState(account, state, changePlatformState).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_UPDATEACCOUNTSTATE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
@@ -148,7 +147,7 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        encodedFunction = authority.crossPlatformApproval(from, to, approved).encodeFunctionCall();
+        String encodedFunction = authority.crossPlatformApproval(from, to, approved).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_CROSSPLATFORMAPPROVAL, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 

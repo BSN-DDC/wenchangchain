@@ -6,13 +6,16 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Strings;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
+/**
+ * web3j工具类，提供对合约的连接管理
+ *
+ */
 public class Web3jUtils {
     private static Web3j web3j;
     private static Authority authority;
@@ -65,7 +68,7 @@ public class Web3jUtils {
 
         if (web3j == null) {
 
-            HttpService httpService = new HttpService(ConfigCache.get().getOpbGatewayAddress());
+            HttpServiceEx httpService = new HttpServiceEx(ConfigCache.get().getOpbGatewayAddress());
             if (!Strings.isEmpty(ConfigCache.get().getHeaderKey()) && !Strings.isEmpty(ConfigCache.get().getHeaderValue())) {
                 httpService.addHeader(ConfigCache.get().getHeaderKey(), ConfigCache.get().getHeaderValue());
             }

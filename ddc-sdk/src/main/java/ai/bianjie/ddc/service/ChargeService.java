@@ -14,7 +14,6 @@ import java.math.BigInteger;
 
 public class ChargeService extends BaseService {
     private Charge charge;
-    private String encodedFunction;
 
     public ChargeService(SignEventListener signEventListener) {
         super.signEventListener = signEventListener;
@@ -44,10 +43,10 @@ public class ChargeService extends BaseService {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (amount == null || amount.intValue() <= 0) {
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
-        encodedFunction = charge.recharge(to, amount).encodeFunctionCall();
+        String encodedFunction = charge.recharge(to, amount).encodeFunctionCall();
 
         return signAndSend(charge, Charge.FUNC_RECHARGE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
@@ -115,10 +114,10 @@ public class ChargeService extends BaseService {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (amount == null || amount.intValue() <= 0) {
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
-        encodedFunction = charge.selfRecharge(amount).encodeFunctionCall();
+        String encodedFunction = charge.selfRecharge(amount).encodeFunctionCall();
 
         return signAndSend(charge, Charge.FUNC_SELFRECHARGE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
@@ -154,11 +153,11 @@ public class ChargeService extends BaseService {
             throw new DDCException(ErrorMessage.SIG_IS_NOT_4BYTE_HASH);
         }
 
-        if (amount == null || amount.intValue() <= 0) {
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
         byte[] sigInByte = Numeric.hexStringToByteArray(sig);
-        encodedFunction = charge.setFee(ddcAddr, sigInByte, amount).encodeFunctionCall();
+        String encodedFunction = charge.setFee(ddcAddr, sigInByte, amount).encodeFunctionCall();
 
         return signAndSend(charge, Charge.FUNC_SETFEE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
@@ -194,7 +193,7 @@ public class ChargeService extends BaseService {
         }
 
         byte[] sigInByte = Numeric.hexStringToByteArray(sig);
-        encodedFunction = charge.delFee(ddcAddr, sigInByte).encodeFunctionCall();
+        String encodedFunction = charge.delFee(ddcAddr, sigInByte).encodeFunctionCall();
 
         return signAndSend(charge, Charge.FUNC_DELFEE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
@@ -220,7 +219,7 @@ public class ChargeService extends BaseService {
             throw new DDCException(ErrorMessage.DDC_ADDR_IS_NOT_ADDRESS_FORMAT);
         }
 
-        encodedFunction = charge.delDDC(ddcAddr).encodeFunctionCall();
+        String encodedFunction = charge.delDDC(ddcAddr).encodeFunctionCall();
 
         return signAndSend(charge, Charge.FUNC_DELDDC, encodedFunction, signEventListener, sender).getTransactionHash();
     }

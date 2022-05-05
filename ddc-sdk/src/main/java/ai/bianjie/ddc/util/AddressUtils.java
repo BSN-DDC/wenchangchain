@@ -2,7 +2,6 @@ package ai.bianjie.ddc.util;
 
 import org.web3j.crypto.WalletUtils;
 import org.bitcoinj.core.AddressFormatException;
-
 import java.io.ByteArrayOutputStream;
 
 public class AddressUtils {

@@ -17,6 +17,8 @@ public class ConfigInfo {
 
     private String headerValue;
 
+    private long connectTimeout;
+
     private String gasPrice = "10000000";
 
     private String gasLimit = "300000";
@@ -41,6 +43,10 @@ public class ConfigInfo {
     private String ddc1155Address = "0xf6Bc71043a176114A8E4cfF686D6F417b971d5bA";
 
     public ConfigInfo() {
+        //默认为10s
+        connectTimeout = 10;
+
+        //自定义每个方法默认的gasLimit
         map.put(Authority.FUNC_ACCOUNTAVAILABLE, "0");
         map.put(Authority.FUNC_ADDACCOUNTBYOPERATOR, "0");
         map.put(Authority.FUNC_ADDFUNCTION, "0");
@@ -248,5 +254,13 @@ public class ConfigInfo {
 
     public void setMap(Map<String, String> map) {
         this.map = map;
+    }
+
+    public long getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public void setConnectTimeout(long connectTimeout) {
+        this.connectTimeout = connectTimeout;
     }
 }
