@@ -7,13 +7,11 @@ public class DDCException extends RuntimeException {
     private final String msg;
 
     public DDCException(ErrorMessage errorMessage) {
-        super(errorMessage.getMessage());
         this.code = errorMessage.getCode();
         this.msg = errorMessage.getMessage();
     }
 
     public DDCException(int code, String msg) {
-        super(msg);
         this.code = code;
         this.msg = msg;
     }

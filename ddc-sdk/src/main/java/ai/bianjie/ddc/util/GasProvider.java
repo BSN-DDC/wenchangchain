@@ -5,6 +5,10 @@ import org.web3j.tx.gas.ContractGasProvider;
 
 import java.math.BigInteger;
 
+/**
+ * 提供gasLimit和gasPrice的管理
+ *
+ */
 public class GasProvider implements ContractGasProvider {
     //默认值
     private String gasPrice = ConfigCache.get().getGasPrice();
@@ -30,7 +34,7 @@ public class GasProvider implements ContractGasProvider {
             return CommonUtils.string2BigInteger(ConfigCache.get().getMap().get(s));
         } else {
             BigInteger defaultLimit = CommonUtils.string2BigInteger(ConfigCache.get().getMap().get(s));
-            if (defaultLimit.intValue() == 0) {
+            if (defaultLimit.compareTo(new BigInteger(String.valueOf(0))) == 0) {
                 return new BigInteger(this.gasLimit);
             }
             return defaultLimit;

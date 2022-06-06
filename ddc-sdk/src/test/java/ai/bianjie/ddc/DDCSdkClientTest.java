@@ -23,6 +23,7 @@ class DDCSdkClientTest {
         client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
         client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
         client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
+        client.setConnectTimeout(20);
 
         BaseService baseService = new BaseService();
         baseService.setFuncGasLimit("100000");
