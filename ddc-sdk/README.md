@@ -39,7 +39,8 @@
      client.setGatewayApiKey("x-api-key");
      //设置value
      client.setGatewayValue([project_key]);
-    
+     //设置连接超时时间（默认为10s）
+     client.setConnectTimeout(20);
     //可单独为每个方法设置gaslimit
     AuthorityService authorityService = client.getAuthorityService(); 
     authorityService.setGasLimitAuthority("100000")

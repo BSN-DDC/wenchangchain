@@ -16,7 +16,6 @@ import java.util.List;
 
 public class DDC1155Service extends BaseService {
     private final DDC1155 ddc1155;
-    private String encodedFunction;
 
     public DDC1155Service(SignEventListener signEventListener) {
         super.signEventListener = signEventListener;
@@ -24,14 +23,14 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * 安全生成DDC
-     * 平台方或终端用户可以通过调用该方法进行DDC的安全生成。
+     * Safely generate DDC
+     * The platform party or end user can generate DDC safely by calling this method.
      *
-     * @param sender 调用者地址
-     * @param to     接收者账户
-     * @param amount DDC数量
-     * @param ddcURI DDCURI
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param to     Recipient account
+     * @param amount Number of DDCs
+     * @param ddcURI DDC resource identifier
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeMint(String sender, String to, BigInteger amount, String ddcURI, byte[] data) throws Exception {
@@ -48,7 +47,7 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
         //4.检查需要生成的DDC数量是否大于0
-        if (amount == null || amount.intValue() <= 0) {
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
         //5.检查ddcURI是否为空
@@ -56,19 +55,19 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.DDCURI_IS_EMPTY);
         }
 
-        encodedFunction = ddc1155.safeMint(to, amount, ddcURI, data).encodeFunctionCall();
+        String encodedFunction = ddc1155.safeMint(to, amount, ddcURI, data).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SAFEMINT, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 批量安全生成
-     * 平台方或终端用户可以通过调用该方法进行DDC的批量安全生成。
+     * Batch Safe Generation
+     * The platform party or the end user can perform batch safe generation of DDC by calling this method.
      *
-     * @param sender  调用者地址
-     * @param to      接收者账户
-     * @param ddcInfo DDC信息
-     * @param data    附加数据
-     * @return 交易哈希
+     * @param sender  Caller address
+     * @param to      Recipient account
+     * @param ddcInfo DDC information
+     * @param data    Additional data
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeMintBatch(String sender, String to, Multimap<BigInteger, String> ddcInfo, byte[] data) throws Exception {
@@ -87,7 +86,7 @@ public class DDC1155Service extends BaseService {
 
         ddcInfo.forEach((amount, ddcURI) -> {
             //检查生成的DDC数量集合中每个DDC数量是否大于0；
-            if (amount == null || amount.intValue() <= 0) {
+            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
                 throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
             }
             //检查生成的ddcURI集合中每个ddcURI是否为空；
@@ -99,18 +98,18 @@ public class DDC1155Service extends BaseService {
 
         });
 
-        encodedFunction = ddc1155.safeMintBatch(to, amounts, ddcURIS, data).encodeFunctionCall();
+        String encodedFunction = ddc1155.safeMintBatch(to, amounts, ddcURIS, data).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SAFEMINTBATCH, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 账户授权
-     * DDC拥有者可以通过调用该方法进行账户授权，发起者需要是DDC的拥有者。
+     * Account authorization
+     * The DDC owner can authorize the account by calling this method, and the initiator needs to be the owner of the DDC.
      *
-     * @param sender   调用者地址
-     * @param operator 授权者账户
-     * @param approved 授权标识
-     * @return 交易哈希
+     * @param sender   Caller address
+     * @param operator Authorizer account
+     * @param approved Authorization ID
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String setApprovalForAll(String sender, String operator, Boolean approved) throws Exception {
@@ -124,17 +123,17 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        encodedFunction = ddc1155.setApprovalForAll(operator, approved).encodeFunctionCall();
+        String encodedFunction = ddc1155.setApprovalForAll(operator, approved).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SETAPPROVALFORALL, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 账户授权查询
-     * 运营方、平台方或终端用户可以通过调用该方法进行账户授权查询。
+     * Account authorization query
+     * Operators, platform parties or end users can call this method to query account authorization.
      *
-     * @param owner    拥有者账户
-     * @param operator 授权者账户
-     * @return 授权结果（boolean）
+     * @param owner    Owner account
+     * @param operator Authorizer account
+     * @return Authorization result（boolean）
      * @throws Exception Exception
      */
     public Boolean isApprovedForAll(String owner, String operator) throws Exception {
@@ -155,16 +154,16 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * 安全转移
-     * DDC拥有者或DDC授权者可以通过调用该方法进行DDC的转移。
+     * Safe transfer
+     * DDC owner or DDC authorizer can transfer DDC by calling this method.
      *
-     * @param sender 调用者地址
-     * @param from   拥有者账户
-     * @param to     接收者账户
-     * @param ddcId  DDCID
-     * @param amount 需要转移的DDC数量
-     * @param data   附加数据
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param from Owner account
+     * @param to Recipient account
+     * @param ddcId DDCID
+     * @param amount The amount of DDC to transfer
+     * @param data Additional data
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeTransferFrom(String sender, String from, String to, BigInteger ddcId, BigInteger amount, byte[] data) throws Exception {
@@ -180,27 +179,27 @@ public class DDC1155Service extends BaseService {
         if (!AddressUtils.isValidAddress(from) || !AddressUtils.isValidAddress(to)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
-        if (amount == null || amount.intValue() <= 0) {
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
 
-        encodedFunction = ddc1155.safeTransferFrom(from, to, ddcId, amount, data).encodeFunctionCall();
+        String encodedFunction = ddc1155.safeTransferFrom(from, to, ddcId, amount, data).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SAFETRANSFERFROM, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 批量安全转移
-     * DDC拥有者或DDC授权者可以通过调用该方法进行DDC的批量转移。
+     * Bulk safe transfer
+     * The DDC owner or DDC authorizer can transfer DDC in batches by calling this method.
      *
-     * @param sender 调用者地址
-     * @param from   拥有者账户
-     * @param to     接收者账户
-     * @param ddcs   拥有者的ddcID集合
-     * @param data   附加数据
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param from Owner account
+     * @param to Recipient account
+     * @param ddcs Owner's ddcID collection
+     * @param data Additional data
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeBatchTransferFrom(String sender, String from, String to, Multimap<BigInteger, BigInteger> ddcs, byte[] data) throws Exception {
@@ -223,70 +222,70 @@ public class DDC1155Service extends BaseService {
         ArrayList<BigInteger> ddcIds = new ArrayList();
         ArrayList<BigInteger> amounts = new ArrayList();
         ddcs.forEach((ddcId, amount) -> {
-            if (ddcId == null || ddcId.intValue() <= 0) {
+            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
                 throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
             }
-            if (amount == null || amount.intValue() <= 0) {
+            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
                 throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
             }
             ddcIds.add(ddcId);
             amounts.add(amount);
         });
 
-        encodedFunction = ddc1155.safeBatchTransferFrom(from, to, ddcIds, amounts, data).encodeFunctionCall();
+        String encodedFunction = ddc1155.safeBatchTransferFrom(from, to, ddcIds, amounts, data).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SAFEBATCHTRANSFERFROM, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 冻结
-     * 运营方可以通过调用该方法进行DDC的冻结。
+     * Freeze
+     * The operator can freeze the DDC by calling this method.
      *
-     * @param sender 调用者地址
-     * @param ddcId  DDC唯一标识
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param ddcId DDC unique identifier
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String freeze(String sender, BigInteger ddcId) throws Exception {
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
-        encodedFunction = ddc1155.freeze(ddcId).encodeFunctionCall();
+        String encodedFunction = ddc1155.freeze(ddcId).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_FREEZE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 解冻
-     * 运营方可以通过调用该方法进行DDC的解冻。
+     * Thaw
+     * The operator can unfreeze the DDC by calling this method.
      *
-     * @param sender 调用者地址
-     * @param ddcId  DDC唯一标识
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param ddcId DDC unique identifier
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String unFreeze(String sender, BigInteger ddcId) throws Exception {
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
-        encodedFunction = ddc1155.unFreeze(ddcId).encodeFunctionCall();
+        String encodedFunction = ddc1155.unFreeze(ddcId).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_UNFREEZE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 销毁
-     * DDC拥有者可以通过调用该方法进行DDC的销毁。
+     * Burn
+     * DDC owner can destroy DDC by calling this method.
      *
-     * @param sender 调用者地址
-     * @param owner  拥有者账户
-     * @param ddcId  DDC唯一标识
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param owner Owner account
+     * @param ddcId DDC unique identifier
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String burn(String sender, String owner, BigInteger ddcId) throws Exception {
@@ -299,22 +298,22 @@ public class DDC1155Service extends BaseService {
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
-        encodedFunction = ddc1155.burn(owner, ddcId).encodeFunctionCall();
+        String encodedFunction = ddc1155.burn(owner, ddcId).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_BURN, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 批量销毁
-     * DDC拥用者可以通过调用该方法进行DDC的批量销毁。
+     * Bulk destruction
+     * DDC owners can destroy DDC in batches by calling this method.
      *
-     * @param sender 调用者地址
-     * @param owner  拥有者账户
-     * @param ddcIds DDC唯一标识的集合
-     * @return 交易哈希
+     * @param sender Caller address
+     * @param owner Owner account
+     * @param ddcIds Collection of DDC unique identifiers
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String burnBatch(String sender, String owner, List<BigInteger> ddcIds) throws Exception {
@@ -331,17 +330,17 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
-        encodedFunction = ddc1155.burnBatch(owner, ddcIds).encodeFunctionCall();
+        String encodedFunction = ddc1155.burnBatch(owner, ddcIds).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_BURNBATCH, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * 查询数量
-     * 运营方、平台方以及终端用户可以通过调用该方法进行查询当前账户拥有的DDC的数量。
+     * Number of queries
+     * Operators, platform parties and end users can query the number of DDCs owned by the current account by calling this method.
      *
-     * @param owner 拥有者账户
-     * @param ddcId DDC唯一标识
-     * @return 拥有者账户拥有对应的ddcId的数量
+     * @param owner Owner account
+     * @param ddcId DDC unique identifier
+     * @return The number of corresponding ddcIds owned by the owner account
      * @throws Exception
      */
     public BigInteger balanceOf(String owner, BigInteger ddcId) throws Exception {
@@ -352,7 +351,7 @@ public class DDC1155Service extends BaseService {
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -360,11 +359,11 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * 批量查询数量
-     * 运营方、平台方以及终端用户可以通过调用该方法进行批量查询账户拥有的DDC的数量。
+     * The number of batch queries
+     * Operators, platforms and end users can call this method to query the number of DDCs owned by an account in batches.
      *
-     * @param ddcs 拥有者ddcID集合
-     * @return 拥有者账户拥有对应的ddcId的数量
+     * @param ddcs Owner ddcID collection
+     * @return The number of corresponding ddcIds owned by the owner account
      * @throws Exception
      */
     public List balanceOfBatch(Multimap<String, BigInteger> ddcs) throws Exception {
@@ -382,7 +381,7 @@ public class DDC1155Service extends BaseService {
             if (!AddressUtils.isValidAddress(owner)) {
                 throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
             }
-            if (ddcId == null || ddcId.intValue() <= 0) {
+            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
                 throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
             }
             owners.add(owner);
@@ -393,15 +392,15 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * 获取ddcURI
-     * 运营方、平台方以及终端用户可以通过调用该方法进行查询当前DDC的资源标识符。
+     * Get ddcURI
+     * The operator, the platform and the end user can query the resource identifier of the current DDC by calling this method.
      *
-     * @param ddcId ddcId
-     * @return ddcURI DDC唯一标识
+     * @param ddcId DDC Unique Identifier
+     * @return DDC resource identifier
      * @throws Exception Exception
      */
     public String ddcURI(BigInteger ddcId) throws Exception {
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -409,14 +408,14 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * URI设置
-     * DDC拥有者通过调用该方法对DDC的资源标识符进行设置。
+     * URI settings
+     * The DDC owner or DDC authorizer sets the resource identifier of the DDC by calling this method.
      *
-     * @param sender 调用者地址
-     * @param owner  拥有者
-     * @param ddcId  DDC唯一标识
-     * @param ddcURI DDC资源标识符
-     * @return 返回交易哈希
+     * @param sender Caller address
+     * @param owner  Owner
+     * @param ddcId  DDC Unique Identifier
+     * @param ddcURI DDC resource identifier
+     * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String setURI(String sender, String owner, BigInteger ddcId, String ddcURI) throws Exception {
@@ -428,7 +427,7 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (ddcId == null || ddcId.intValue() <= 0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -436,7 +435,7 @@ public class DDC1155Service extends BaseService {
             throw new DDCException(ErrorMessage.DDCURI_IS_EMPTY);
         }
 
-        encodedFunction = ddc1155.setURI(owner, ddcId, ddcURI).encodeFunctionCall();
+        String encodedFunction = ddc1155.setURI(owner, ddcId, ddcURI).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SETURI, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 }
