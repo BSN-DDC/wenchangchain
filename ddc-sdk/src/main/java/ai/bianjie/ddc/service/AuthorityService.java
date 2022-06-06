@@ -1,16 +1,16 @@
 package ai.bianjie.ddc.service;
 
-import ai.bianjie.ddc.constant.ErrorMessage;
+import java.math.BigInteger;
+
 import ai.bianjie.ddc.contract.Authority;
+import org.web3j.utils.Strings;
+import org.web3j.tuples.generated.Tuple7;
+import ai.bianjie.ddc.constant.ErrorMessage;
 import ai.bianjie.ddc.dto.AccountInfo;
 import ai.bianjie.ddc.exception.DDCException;
 import ai.bianjie.ddc.listener.SignEventListener;
 import ai.bianjie.ddc.util.AddressUtils;
 import ai.bianjie.ddc.util.Web3jUtils;
-import org.web3j.tuples.generated.Tuple7;
-import org.web3j.utils.Strings;
-
-import java.math.BigInteger;
 
 
 public class AuthorityService extends BaseService {
@@ -22,17 +22,21 @@ public class AuthorityService extends BaseService {
     }
 
     /**
-     * 运营方可以通过调用该方法直接对平台方或平台方的终端用户进行创建。
+     * The operator can directly create the platform side or the end user of the platform side by calling this method.
      *
-     * @param sender    调用者地址
-     * @param account   DDC链账户地址
-     * @param accName   DDC账户对应的账户名称
-     * @param accDID    DDC账户对应的DID信息
-     * @param leaderDID 该普通账户对应的上级账户的DID
-     * @return 返回交易哈希
+     * @param sender    Caller address
+     * @param account   DDC chain account address
+     * @param accName   The account name corresponding to the DDC account
+     * @param accDID    DID information corresponding to the DDC account
+     * @param leaderDID The DID of the superior account corresponding to the ordinary account
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String addAccountByOperator(String sender, String account, String accName, String accDID, String leaderDID) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -54,23 +58,10 @@ public class AuthorityService extends BaseService {
     }
 
     /**
-     * 删除账户
+     * Operators, platform parties and end users can query DDC account information by calling this method.
      *
-     * @param account DDC链账户地址
-     * @param sender  此方法暂不使用
-     * @return 返回交易哈希
-     * @throws Exception
-     */
-    public String delAccount(String sender, String account) throws Exception {
-        throw new DDCException(ErrorMessage.UNKNOWN_ERROR);
-    }
-
-
-    /**
-     * 运营方、平台方以及终端用户可以通过调用该方法进行DDC账户信息的查询。
-     *
-     * @param account DDC用户链账户地址
-     * @return 返回DDC账户信息
+     * @param account DDC user chain account address
+     * @return AccountInfo, DDC Account Information
      * @throws Exception
      */
     public AccountInfo getAccount(String account) throws Exception {
@@ -81,21 +72,26 @@ public class AuthorityService extends BaseService {
         if (!AddressUtils.isValidAddress(account)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         Tuple7<String, String, BigInteger, String, BigInteger, BigInteger, String> res = Web3jUtils.getAuthority().getAccount(account).send();
-        return new AccountInfo(res.component1(), res.component2(), res.component3().toString(), res.component4(), res.component5().toString(), res.component6().toString(), res.component7());
+        return new AccountInfo(account, res.component1(), res.component2(), res.component3().toString(), res.component4(), res.component5().toString(), res.component6().toString(), res.component7());
     }
 
     /**
-     * 运营方或平台方可以通过调用该方法对终端用户进行DDC账户信息状态的更改。
+     * The operator or the platform can change the status of the DDC account information for the end user by calling this method.
      *
-     * @param sender              调用者地址
-     * @param account             DDC用户链账户地址
-     * @param state               状态 ：Frozen - 冻结状态 ； Active - 活跃状态
-     * @param changePlatformState 修改平台方状态标识
-     * @return 返回交易哈希
+     * @param sender              Caller address
+     * @param account             DDC user chain account address
+     * @param state               Status: Frozen - Frozen; Active - Active
+     * @param changePlatformState Modify the platform side status flag
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String updateAccState(String sender, String account, BigInteger state, boolean changePlatformState) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -117,13 +113,13 @@ public class AuthorityService extends BaseService {
     }
 
     /**
-     * 运营方可以通过调用该方法对DDC的跨平台操作进行授权。
+     * The operator can authorize the cross-platform operation of DDC by calling this method.
      *
-     * @param sender   调用者地址
-     * @param from     授权者
-     * @param to       接收者
-     * @param approved 授权标识
-     * @return 返回交易哈希
+     * @param sender caller address
+     * @param from authorizer
+     * @param to receiver
+     * @param approved authorization logo
+     * @return returns the transaction hash
      * @throws Exception
      */
     public String crossPlatformApproval(String sender, String from, String to, Boolean approved) throws Exception {

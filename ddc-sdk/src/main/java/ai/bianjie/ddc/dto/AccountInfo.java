@@ -4,7 +4,7 @@ public class AccountInfo {
     public AccountInfo() {
     }
 
-    public AccountInfo(String accountDID, String accountName, String accountRole, String leaderDID, String platformState, String operatorState, String field) {
+    public AccountInfo(String address, String accountDID, String accountName, String accountRole, String leaderDID, String platformState, String operatorState, String field) {
         this.accountDID = accountDID;
         this.accountName = accountName;
         this.accountRole = accountRole;
@@ -12,6 +12,7 @@ public class AccountInfo {
         this.platformState = platformState;
         this.operatorState = operatorState;
         this.field = field;
+        this.address = address;
     }
 
     private String accountDID;
@@ -21,6 +22,7 @@ public class AccountInfo {
     private String platformState;
     private String operatorState;
     private String field;
+    private String address;
 
     public String getAccountDID() {
         return accountDID;
@@ -76,6 +78,14 @@ public class AccountInfo {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override

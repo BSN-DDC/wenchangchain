@@ -22,15 +22,19 @@ public class ChargeService extends BaseService {
 
 
     /**
-     * 运营方、平台方调用该接口为所属同一方的同一级别账户或者下级账户充值；
+     * The operator and the platform party call this interface to recharge the account of the same level or the lower-level account of the same party.
      *
-     * @param sender 调用者地址
-     * @param to     充值账户的地址
-     * @param amount 充值金额
-     * @return 返回交易哈希
+     * @param sender Caller address
+     * @param to     The address of the top-up account
+     * @param amount Recharge amount
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String recharge(String sender, String to, BigInteger amount) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -52,10 +56,10 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 查询指定账户的余额。
+     * The operator, platform or end user can call the method to query the balance of the specified account.
      *
-     * @param accAddr 查询的账户地址
-     * @return 返回账户所对应的业务费余额
+     * @param accAddr Query account address
+     * @return balance, The business fee balance corresponding to the account
      * @throws Exception
      */
     public BigInteger balanceOf(String accAddr) throws Exception {
@@ -72,11 +76,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 查询指定的DDC业务主逻辑合约的方法所对应的调用业务费用。
+     * The operator, the platform party or the end user can query the invocation service fee corresponding to the method of the specified DDC service contract by invoking this method.
      *
-     * @param ddcAddr DDC业务合约地址
-     * @param sig     Hex格式的合约方法ID
-     * @return 返回查询的DDC合约业务费
+     * @param ddcAddr DDC business contract address
+     * @param sig     Contract method ID in Hex format
+     * @return Inquired DDC contract business fee
      * @throws Exception
      */
     public BigInteger queryFee(String ddcAddr, String sig) throws Exception {
@@ -102,11 +106,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 运营方调用为自己的账户增加业务费。
+     * Operators can add business fees to their own accounts by calling this method.
      *
-     * @param sender 调用者地址
-     * @param amount 对运营方账户进行充值的业务费
-     * @return 返回交易哈希
+     * @param sender Caller address
+     * @param amount Business fee for recharging the operator's account
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String selfRecharge(String sender, BigInteger amount) throws Exception {
@@ -123,13 +127,13 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 运营方调用接口设置指定的DDC主合约的方法调用费用。
+     * The operator can set the method call fee of the specified DDC main contract by calling this method.
      *
-     * @param sender  调用者地址
-     * @param ddcAddr DDC业务合约地址
-     * @param sig     Hex格式的合约方法ID
-     * @param amount  业务费用
-     * @return 返回交易哈希
+     * @param sender  Caller address
+     * @param ddcAddr DDC business contract address
+     * @param sig     Contract method ID in Hex format
+     * @param amount  Business expenses
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String setFee(String sender, String ddcAddr, String sig, BigInteger amount) throws Exception {
@@ -163,12 +167,12 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 运营方调用接口删除指定的DDC主合约的方法调用费用。
+     * The operator can delete the method call fee of the specified DDC main contract by calling this method.
      *
-     * @param sender  调用者地址
-     * @param ddcAddr DDC业务合约地址
-     * @param sig     Hex格式的合约方法ID
-     * @return 返回交易哈希
+     * @param sender  Caller address
+     * @param ddcAddr DDC business contract address
+     * @param sig     Contract method ID in Hex format
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String delFee(String sender, String ddcAddr, String sig) throws Exception {
@@ -199,11 +203,11 @@ public class ChargeService extends BaseService {
     }
 
     /**
-     * 运营方调用该接口删除指定的DDC业务主逻辑合约授权。
+     * The operator can delete the specified DDC business contract authorization by calling this method.
      *
-     * @param sender  调用者地址'
-     * @param ddcAddr DDC业务合约地址
-     * @return 返回交易哈希
+     * @param sender  Caller address
+     * @param ddcAddr DDC business contract address
+     * @return hash, Transaction hash
      * @throws Exception
      */
     public String delDDC(String sender, String ddcAddr) throws Exception {

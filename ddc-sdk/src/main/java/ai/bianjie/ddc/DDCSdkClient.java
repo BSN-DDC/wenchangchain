@@ -12,7 +12,7 @@ public class DDCSdkClient {
     private SignEventListener signEventListener;
 
     /**
-     * SDK 初始化方法
+     * SDK initialization method
      */
     private DDCSdkClient(Builder builder) {
         this.signEventListener = builder.signEventListener;
@@ -108,36 +108,36 @@ public class DDCSdkClient {
     }
 
     /**
-     * 获取权限管理服务的示例
+     * Example of obtaining rights management service
      *
-     * @return 返回权限管理服务的实例
+     * @return returns the instance of the permission management service
      */
     public AuthorityService getAuthorityService() {
         return new AuthorityService(signEventListener);
     }
 
     /**
-     * 获取费用管理服务的实例
+     * Get an instance of the expense management service
      *
-     * @return 返回费用管理服务的实例
+     * @return returns the instance of the expense management service
      */
     public ChargeService getChargeService() {
         return new ChargeService(signEventListener);
     }
 
     /**
-     * 获取BSN-DDC-1155合约服务的实例
+     * Get an instance of BSN-DDC-1155 contract service
      *
-     * @return 返回BSN-DDC-1155合约服务的实例
+     * @return returns an instance of the BSN-DDC-1155 contract service
      */
     public DDC1155Service getDDC1155Service() {
         return new DDC1155Service(signEventListener);
     }
 
     /**
-     * 获取BSN-DDC-721合约服务的实例
+     * Get an instance of BSN-DDC-721 contract service
      *
-     * @return 返回BSN-DDC-721合约服务的实例
+     * @return returns an instance of the BSN-DDC-721 contract service
      */
     public DDC721Service getDDC721Service() {
         return new DDC721Service(signEventListener);

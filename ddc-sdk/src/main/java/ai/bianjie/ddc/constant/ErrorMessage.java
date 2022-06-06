@@ -14,7 +14,6 @@ public enum ErrorMessage {
     AMOUNT_IS_EMPTY(1006, "amount is empty"),
     TO_ACCOUNT_IS_EMPTY(1007, "to account is empty"),
     TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1008, "to account is not a standard address format"),
-    SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1029, "sender account is not a standard address format"),
     FROM_ACCOUNT_IS_EMPTY(1009, "from account is empty"),
     FROM_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1010, "from account is not a standard address format"),
     ACC_ADDR_IS_EMPTY(1011, "accAddr is empty"),
@@ -35,10 +34,13 @@ public enum ErrorMessage {
     READ_FILE_FAILED(1026, "raed file is failed"),
     SIGN_METHOD_EMPTY(1027, "sign method is empty"),
     NO_SIGN_EVENT_LISTNER(1028, "not register sign event listener"),
-    OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1029, "owner account is not a standard address format"),
-    SIG_IS_EMPTY(1018, "sig is empty"),
-    SIG_IS_NOT_4BYTE_HASH(1019, "sig is not 4 byte hash"),
-    REQUEST_FAILED(2001, ""),
+    SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1029, "sender account is not a standard address format"),
+    OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1030, "owner account is not a standard address format"),
+    SIG_IS_EMPTY(1031, "sig is empty"),
+    SIG_IS_NOT_4BYTE_HASH(1032, "sig is not 4 byte hash"),
+    REQUEST_FAILED(1033, ""),
+    ERR_ACCOUNTS_SIZE(1034,"accounts size error"),
+    DID_IS_EMPTY(1035, "did is empty"),
     ;
 
     private Integer code;
