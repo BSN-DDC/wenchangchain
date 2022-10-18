@@ -2,7 +2,8 @@
 
 - [DDC-SDK-JAVA](#ddc-sdk-java)
   - [平台方可调用的如下方法：](#平台方可调用的如下方法)
-    - [1.初始化Client (连接测试网)](#1初始化client-连接测试网)
+    - [合约地址信息：](#合约地址信息)
+    - [1.初始化Client](#1初始化client)
     - [2.BSN-DDC-权限管理](#2bsn-ddc-权限管理)
     - [3.BSN-DDC-费用管理](#3bsn-ddc-费用管理)
     - [4.BSN-DDC-721](#4bsn-ddc-721)
@@ -14,7 +15,7 @@
     - [10.查询Gas余额](#10查询gas余额)
     - [11.设置账户 nonce](#11设置账户-nonce)
   - [终端用户可调用的如下方法：](#终端用户可调用的如下方法)
-    - [1.初始化Client (连接测试网)](#1初始化client-连接测试网-1)
+    - [1.初始化Client](#1初始化client-1)
     - [2.BSN-DDC-权限管理](#2bsn-ddc-权限管理-1)
     - [3.BSN-DDC-费用管理](#3bsn-ddc-费用管理-1)
     - [4.BSN-DDC-721](#4bsn-ddc-721-1)
@@ -27,9 +28,18 @@
 
 ## 平台方可调用的如下方法：
 
-### 1.初始化Client (连接测试网)
+### 合约地址信息：
 
 ```
+ 权限代理合约地址：0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29
+ 计费代理合约地址：0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D
+ DDC 721代理合约地址：0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870
+ DDC 1155代理合约地址：0x0E762F4D11439B1130D402995328b634cB9c9973
+```
+
+### 1.初始化Client
+
+```java
     // 注册签名事件
     SignEventListener signEventListener = new sign();
     
@@ -43,21 +53,21 @@
     // 创建客户端
     // 也可设置相关参数值 gasprice，gaslimit，相关合约地址
     // irita 中 gaslimit 设置值即消耗值，扣费换算：1 uirita = 1e12 wei
-    // 建议 gaslimit 设置为300000以上，gasprice 设置为10000000以上
+    // 建议 gaslimit 设置为3000000以上，gasprice 设置为10000000以上
      DDCSdkClient client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xdAc50c90b934AdED33b6ADc9f5855ab8a9EFB09a")
-                .setChargeLogicAddress("0x52403cE9E235Cf013bA2353F0bf47834C98424c7")
-                .setDDC721Address("0x503f45958F57Da55170B54796F4eD224c9fef9d7")
-                .setDDC1155Address("0xe7310D2D79c67a3078DBeFA67344c7047AC28708")
-                .setGasLimit("300000")
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址 
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址 
+                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setGasLimit("3000000")
                 .setGasPrice("10000000")
                 .setSignEventListener(new sign())
                 .init();
 
      // 设置网关
-     client.setGatewayUrl("192.168.42.1");
+     client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc");
      // 设置key
-     client.setGatewayApiKey("x-api-key");
+     client.setGatewayApiKey("[项目KEY]");
      // 设置value
      client.setGatewayValue("xxxxx");
      // 设置连接超时时间（默认为10s）
@@ -73,7 +83,7 @@
 
 ### 2.BSN-DDC-权限管理
 
-```
+```java
      AuthorityService authorityService = client.getAuthorityService(); 
      
     // 添加账户
@@ -113,7 +123,7 @@
 
 ### 3.BSN-DDC-费用管理
 
-```
+```java
     ChargeService chargeService = client.getChargeService();  
     
     // 充值
@@ -150,7 +160,7 @@
 
 ### 4.BSN-DDC-721
 
-```
+```java
     DDC721Service ddc721Service = client.getDDC721Service(); 
     
     // 生成
@@ -303,7 +313,7 @@
 
 ### 5.BSN-DDC-1155
 
-```
+```java
     DDC1155Service ddc1155Service = client.getDDC1155Service(); 
     
     // 生成
@@ -380,7 +390,7 @@
 
 ### 6.BSN-DDC-交易查询
 
-```
+```java
 	BaseService baseService = new BaseService();
 	
 	// 查询交易回执
@@ -402,7 +412,7 @@
 
 ### 7.BSN-DDC-区块查询
 
-```
+```java
 	BaseService baseService = new BaseService();
 	
     // 获取区块信息
@@ -456,7 +466,7 @@
         7.4.11元交易销毁
 ```
 
-```
+```java
 	BlockEventService blockEventService = new BlockEventService();
 	// 获取区块事件并解析
 	// 1. 根据块高获取区块信息
@@ -474,7 +484,7 @@
 
 ### 9.离线账户创建
 
-```
+```java
 // 创建Hex格式账户
 // 返回包含助记词，公钥，私钥，hex格式地址的Account对象
 BaseService baseService=new BaseService();
@@ -488,33 +498,33 @@ BaseService baseService=new BaseService();
 
 ### 10.查询Gas余额
 
-```
+```java
 // 查询链账户Gas余额
 System.out.println(baseService.BalanceOfGas("链账户地址"));
 ```
 
 ### 11.设置账户 nonce
 
-```
+```java
 BaseService baseService =new BaseService();
 baseService.setNonce(new BigInteger("481"));
 ```
 
-```
+```java
     void nonceTest() throws Exception {
 
 	// 初始化 DDC 客户端      
-        DDCSdkClient client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 官方合约地址
-                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D") // 官方合约地址
-                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870") // 官方合约地址
-                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973") // 官方合约地址
-                .setGasLimit("300000") // 自定义 Gas 上限
-                .setGasPrice("1") // 固定 Gas Price，无需修改
-                .setSignEventListener(new SignEventTest()) // 签名事件示例，建议参考示例自行实现
+     DDCSdkClient client = new DDCSdkClient.Builder()
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址 
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址 
+                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setGasLimit("3000000")
+                .setGasPrice("10000000")
+                .setSignEventListener(new sign())
                 .init();
 
-        client.setGatewayUrl("https:// opbningxia.bsngate.com:18602/api/项目ID/evmrpc"); // EVM RPC 地址
+        client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc"); // EVM RPC 地址
         client.setConnectTimeout(20);// 请求超时时间，自定义
         String sender = "平台方链账户地址"; // 平台方链账户地址
 
@@ -539,9 +549,9 @@ baseService.setNonce(new BigInteger("481"));
 
 ## 终端用户可调用的如下方法：
 
-### 1.初始化Client (连接测试网)
+### 1.初始化Client
 
-```
+```java
     // 注册签名事件
     SignEventListener signEventListener = new sign();
     
@@ -557,19 +567,19 @@ baseService.setNonce(new BigInteger("481"));
     // irita 中 gaslimit 设置值即消耗值，扣费换算：1 uirita = 1e12 wei
     // 建议 gaslimit 设置为300000以上，gasprice 设置为10000000以上
      DDCSdkClient client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xdAc50c90b934AdED33b6ADc9f5855ab8a9EFB09a")
-                .setChargeLogicAddress("0x52403cE9E235Cf013bA2353F0bf47834C98424c7")
-                .setDDC721Address("0x503f45958F57Da55170B54796F4eD224c9fef9d7")
-                .setDDC1155Address("0xe7310D2D79c67a3078DBeFA67344c7047AC28708")
-                .setGasLimit("300000")
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址 
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址 
+                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setGasLimit("3000000")
                 .setGasPrice("10000000")
                 .setSignEventListener(new sign())
                 .init();
 
      // 设置网关
-     client.setGatewayUrl("192.168.42.1");
+     client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc");
      // 设置key
-     client.setGatewayApiKey("x-api-key");
+     client.setGatewayApiKey("[项目KEY]");
      // 设置value
      client.setGatewayValue("xxxxx");
      // 设置连接超时时间（默认为10s）
@@ -585,7 +595,7 @@ baseService.setNonce(new BigInteger("481"));
 
 ### 2.BSN-DDC-权限管理
 
-```
+```java
 	AuthorityService authorityService = client.getAuthorityService(); 
     
     // 查询账户
@@ -597,7 +607,7 @@ baseService.setNonce(new BigInteger("481"));
 
 ### 3.BSN-DDC-费用管理
 
-```
+```java
     ChargeService chargeService = client.getChargeService();  
     
     // 链账户余额查询
@@ -622,7 +632,7 @@ baseService.setNonce(new BigInteger("481"));
 
 ### 4.BSN-DDC-721
 
-```
+```java
      DDC721Service ddc721Service = client.getDDC721Service(); 
     
     // 生成
@@ -775,7 +785,7 @@ baseService.setNonce(new BigInteger("481"));
 
 ### 5.BSN-DDC-1155
 
-```
+```java
     DDC1155Service ddc1155Service = client.getDDC1155Service(); 
     
     // 生成
@@ -882,7 +892,7 @@ baseService.setNonce(new BigInteger("481"));
         5.4.8批量销毁
 ```
 
-```
+```java
 	BlockEventService blockEventService = new BlockEventService();
 	// 获取区块事件并解析
 	// 1. 根据块高获取区块信息
@@ -900,7 +910,7 @@ baseService.setNonce(new BigInteger("481"));
 
 ### 9.离线账户创建
 
-```
+```java
 // 创建Hex格式账户
 // 返回包含助记词，公钥，私钥，hex格式地址的Account对象
 BaseService baseService=new BaseService();
@@ -914,32 +924,31 @@ BaseService baseService=new BaseService();
 
 ### 10.查询Gas余额
 
-```
+```java
 // 查询链账户Gas余额
 System.out.println(baseService.BalanceOfGas("链账户地址"));
 ```
 
 ### 11.设置账户 nonce
 
-```
+```java
 BaseService baseService =new BaseService();
 baseService.setNonce(new BigInteger("481"));
-```
 
     void nonceTest() throws Exception {
     
     // 初始化 DDC 客户端      
         DDCSdkClient client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 官方合约地址
-                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D") // 官方合约地址
-                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870") // 官方合约地址
-                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973") // 官方合约地址
-                .setGasLimit("300000") // 自定义 Gas 上限
-                .setGasPrice("1") // 固定 Gas Price，无需修改
-                .setSignEventListener(new SignEventTest()) // 签名事件示例，建议参考示例自行实现
-                .init();
+                    .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                    .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址 
+                    .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址 
+                    .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                    .setGasLimit("3000000")
+                    .setGasPrice("10000000")
+                    .setSignEventListener(new sign())
+                    .init();
     
-        client.setGatewayUrl("https:// opbningxia.bsngate.com:18602/api/项目ID/evmrpc"); // EVM RPC 地址
+        client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc"); // EVM RPC 地址
         client.setConnectTimeout(20);// 请求超时时间，自定义
         String sender = "平台方链账户地址"; // 平台方链账户地址
     
@@ -960,6 +969,7 @@ baseService.setNonce(new BigInteger("481"));
             txNonce = txNonce.add(new BigInteger("1"));
         }
     }
+```
 
 ## 测试用例
 

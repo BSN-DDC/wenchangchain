@@ -22,34 +22,24 @@ class BaseServiceTest {
 
     @Test
     void getBlockByNumber() throws IOException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         EthBlock.Block block = baseService.getBlockByNumber(new BigInteger("3058179"));
         System.out.println("--------------------------------------" + block.getHash());
     }
 
     @Test
     void getTransReceipt() throws ExecutionException, InterruptedException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         TransactionReceipt transactionReceipt = baseService.getTransReceipt("0x6045220771fafea125d52d9a0565be816b1d5cdfe8f03bd2d511b6bf8671018d");
         System.out.println("tx receipt: " + transactionReceipt);
     }
 
     @Test
     void getTransByHash() throws IOException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         TxInfo transaction = baseService.getTransByHash("0x7b470e83b464ebce5f5e9bc0bcc3ac56d1d44651bca600fd524b13d06e49f3cc");
         System.out.println("tx: " + transaction);
     }
 
     @Test
     void getTransByStatus() throws IOException {
-        client.setGatewayUrl("http://192.168.150.42:8545");
         Boolean status = baseService.getTransByStatus("0x8c13384524226c5e6068bde16909f3c90784cf9ce6ea9dafdf6157b7b1a92b72");
         System.out.println("--------------------------------------" + status);
     }
@@ -61,18 +51,12 @@ class BaseServiceTest {
 
     @Test
     void AccoutHexToBech32() throws MnemonicException.MnemonicLengthException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         Account acc = baseService.createAccount();
         System.out.println(baseService.accountHexToBech32(acc.getAddress()));
     }
 
     @Test
     void AccountBech32ToHex() throws MnemonicException.MnemonicLengthException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         Account acc = baseService.createAccount();
         System.out.println(acc.getAddress());
         String a = baseService.accountHexToBech32(acc.getAddress());
@@ -81,9 +65,6 @@ class BaseServiceTest {
 
     @Test
     void createAccount() {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
-        client.setGatewayApiKey("x-api-key");
-        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         System.out.println(baseService.createAccount().getAddress());
         System.out.println(baseService.createAccount().getPrivateKey());
         System.out.println(baseService.createAccount().getKeyseed());

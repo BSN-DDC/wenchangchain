@@ -16,31 +16,31 @@ public class DDCSdkClientTest {
 
     public static DDCSdkClient getClient() {
         client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0x9664F35ccAC9dD38Be831c80c2698c9DD7Ee7c4A")
-                .setChargeLogicAddress("0x276076313757029E876B9F6B3D4404941843F8FB")
-                .setDDC721Address("0x63edD4A5C49B4caC9306F8FF01c32aDc023934cE")
-                .setDDC1155Address("0xE15D6E4B2E710a2ECb1fe0DEB1DF9041181d0ED2")
-                .setGasLimit("3000")
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址
+                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setGasLimit("3000000")
                 .setGasPrice("1")
                 .setSignEventListener(new SignEventTest())
                 .setCredentials("ED43B9686AB520C896BC33A1461BAF163EDBF0DBC4D3199E77793A49B9BB2568")
                 .init();
-        client.setGatewayUrl("http://192.168.150.42:8545");
+        client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc");
 
         return client;
     }
 
     public static DDCSdkClient getBSNClient() {
         client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xDb391cFC8BCF12312E690131404c675730c5Ce82")
-                .setChargeLogicAddress("0x2991Ef144245893e54c82072F138479Aa65Aea5C")
-                .setDDC721Address("0x7D95Cb8b8a3d4A353c4d7532c6Fa81cd3c339765")
-                .setDDC1155Address("0xe0F2051eEe637C026FcEFE27a3e5AEDD939d3fC5")
-                .setGasLimit("300000")
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址
+                .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setGasLimit("3000000")
                 .setGasPrice("1")
                 .setSignEventListener(new SignEventTest())
                 .init();
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/IRISnetrest/evmrpc");
+        client.setGatewayUrl("https://opbningxia.bsngate.com:18602/api/[项目ID]/evmrpc");
 //        client.setGatewayApiKey("x-api-key");
 //        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
 
