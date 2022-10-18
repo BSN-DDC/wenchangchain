@@ -39,8 +39,14 @@ public enum ErrorMessage {
     SIG_IS_EMPTY(1031, "sig is empty"),
     SIG_IS_NOT_4BYTE_HASH(1032, "sig is not 4 byte hash"),
     REQUEST_FAILED(1033, ""),
-    ERR_ACCOUNTS_SIZE(1034,"accounts size error"),
+    ERR_ACCOUNTS_SIZE(1034, "accounts size error"),
     DID_IS_EMPTY(1035, "did is empty"),
+    ERR_AMOUNTS_SIZE(1036, "amounts size error"),
+    ERR_NAME_DID_ADDRESS_SIZE(1037, "account names, dids, addresses size are not equal"),
+    ERR_NAMES_SIZE(1038, "names size error"),
+    ERR_DIDS_SIZE(1039, "dids size error"),
+    ERR_TOLIST_ACCOUNTS_SIZE_MISMATCH(1040,"the size of to account and accounts mismatch"),
+    ERR_GASLIMIT(1041,"gasLimit too low")
     ;
 
     private Integer code;

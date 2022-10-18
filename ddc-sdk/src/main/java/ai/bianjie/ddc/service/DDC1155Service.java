@@ -24,35 +24,35 @@ public class DDC1155Service extends BaseService {
 
     /**
      * Safely generate DDC
-     * The platform party or end user can generate DDC safely by calling this method.
+     * The platform party or end user can generate DDC securely by calling this method.
      *
      * @param sender Caller address
      * @param to     Recipient account
      * @param amount Number of DDCs
      * @param ddcURI DDC resource identifier
+     * @param data   Additional data
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeMint(String sender, String to, BigInteger amount, String ddcURI, byte[] data) throws Exception {
-        //1.检查sender为标准备address格式
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        //2.检查接收者账户地址是否为空
+
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
-        //3.检查接收者账户地址是否正确
+
         if (!AddressUtils.isValidAddress(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        //4.检查需要生成的DDC数量是否大于0
-        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
-        }
-        //5.检查ddcURI是否为空
-        if (Strings.isEmpty(ddcURI)) {
-            throw new DDCException(ErrorMessage.DDCURI_IS_EMPTY);
         }
 
         String encodedFunction = ddc1155.safeMint(to, amount, ddcURI, data).encodeFunctionCall();
@@ -63,20 +63,26 @@ public class DDC1155Service extends BaseService {
      * Batch Safe Generation
      * The platform party or the end user can perform batch safe generation of DDC by calling this method.
      *
-     * @param sender  Caller address
-     * @param to      Recipient account
-     * @param ddcInfo DDC information
-     * @param data    Additional data
+     * @param sender Caller address
+     * @param to     Recipient account
+     * @param ddcs   DDC information
+     * @param data   Additional data
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
-    public String safeMintBatch(String sender, String to, Multimap<BigInteger, String> ddcInfo, byte[] data) throws Exception {
+    public String safeMintBatch(String sender, String to, Multimap<BigInteger, String> ddcs, byte[] data) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(to)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -84,12 +90,14 @@ public class DDC1155Service extends BaseService {
         List<BigInteger> amounts = new ArrayList<>();
         List<String> ddcURIS = new ArrayList<>();
 
-        ddcInfo.forEach((amount, ddcURI) -> {
-            //检查生成的DDC数量集合中每个DDC数量是否大于0；
-            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+        if (ddcs == null || ddcs.size() <= 0) {
+            throw new DDCException(ErrorMessage.ERR_ACCOUNTS_SIZE);
+        }
+
+        ddcs.forEach((amount, ddcURI) -> {
+            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
                 throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
             }
-            //检查生成的ddcURI集合中每个ddcURI是否为空；
             if (Strings.isEmpty(ddcURI)) {
                 throw new DDCException(ErrorMessage.DDCURI_IS_EMPTY);
             }
@@ -113,12 +121,19 @@ public class DDC1155Service extends BaseService {
      * @throws Exception Exception
      */
     public String setApprovalForAll(String sender, String operator, Boolean approved) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (Strings.isEmpty(operator)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(operator)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -137,15 +152,19 @@ public class DDC1155Service extends BaseService {
      * @throws Exception Exception
      */
     public Boolean isApprovedForAll(String owner, String operator) throws Exception {
+
         if (Strings.isEmpty(owner)) {
             throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
         }
+
         if (Strings.isEmpty(operator)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (!AddressUtils.isValidAddress(operator)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
@@ -158,31 +177,41 @@ public class DDC1155Service extends BaseService {
      * DDC owner or DDC authorizer can transfer DDC by calling this method.
      *
      * @param sender Caller address
-     * @param from Owner account
-     * @param to Recipient account
-     * @param ddcId DDCID
+     * @param from   Owner account
+     * @param to     Recipient account
+     * @param ddcId  DDCID
      * @param amount The amount of DDC to transfer
-     * @param data Additional data
+     * @param data   Additional data
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeTransferFrom(String sender, String from, String to, BigInteger ddcId, BigInteger amount, byte[] data) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (Strings.isEmpty(from)) {
             throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
         }
+
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(from) || !AddressUtils.isValidAddress(to)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
-        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
         }
 
@@ -195,37 +224,46 @@ public class DDC1155Service extends BaseService {
      * The DDC owner or DDC authorizer can transfer DDC in batches by calling this method.
      *
      * @param sender Caller address
-     * @param from Owner account
-     * @param to Recipient account
-     * @param ddcs Owner's ddcID collection
-     * @param data Additional data
+     * @param from   Owner account
+     * @param to     Recipient account
+     * @param ddcs   Owner's ddcID collection
+     * @param data   Additional data
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String safeBatchTransferFrom(String sender, String from, String to, Multimap<BigInteger, BigInteger> ddcs, byte[] data) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (Strings.isEmpty(from)) {
             throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
         }
+
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(from) || !AddressUtils.isValidAddress(to)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcs == null) {
+
+        if (ddcs == null || ddcs.size() <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
         ArrayList<BigInteger> ddcIds = new ArrayList();
         ArrayList<BigInteger> amounts = new ArrayList();
         ddcs.forEach((ddcId, amount) -> {
-            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
                 throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
             }
-            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+            if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
                 throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
             }
             ddcIds.add(ddcId);
@@ -237,68 +275,34 @@ public class DDC1155Service extends BaseService {
     }
 
     /**
-     * Freeze
-     * The operator can freeze the DDC by calling this method.
-     *
-     * @param sender Caller address
-     * @param ddcId DDC unique identifier
-     * @return hash, Transaction hash
-     * @throws Exception Exception
-     */
-    public String freeze(String sender, BigInteger ddcId) throws Exception {
-        if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-        }
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
-            throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
-        }
-
-        String encodedFunction = ddc1155.freeze(ddcId).encodeFunctionCall();
-        return signAndSend(ddc1155, DDC1155.FUNC_FREEZE, encodedFunction, signEventListener, sender).getTransactionHash();
-    }
-
-    /**
-     * Thaw
-     * The operator can unfreeze the DDC by calling this method.
-     *
-     * @param sender Caller address
-     * @param ddcId DDC unique identifier
-     * @return hash, Transaction hash
-     * @throws Exception Exception
-     */
-    public String unFreeze(String sender, BigInteger ddcId) throws Exception {
-        if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-        }
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
-            throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
-        }
-
-        String encodedFunction = ddc1155.unFreeze(ddcId).encodeFunctionCall();
-        return signAndSend(ddc1155, DDC1155.FUNC_UNFREEZE, encodedFunction, signEventListener, sender).getTransactionHash();
-    }
-
-    /**
      * Burn
      * DDC owner can destroy DDC by calling this method.
      *
      * @param sender Caller address
-     * @param owner Owner account
-     * @param ddcId DDC unique identifier
+     * @param owner  Owner account
+     * @param ddcId  DDC unique identifier
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String burn(String sender, String owner, BigInteger ddcId) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
+
         if (Strings.isEmpty(owner)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -311,24 +315,37 @@ public class DDC1155Service extends BaseService {
      * DDC owners can destroy DDC in batches by calling this method.
      *
      * @param sender Caller address
-     * @param owner Owner account
+     * @param owner  Owner account
      * @param ddcIds Collection of DDC unique identifiers
      * @return hash, Transaction hash
      * @throws Exception Exception
      */
     public String burnBatch(String sender, String owner, List<BigInteger> ddcIds) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
         if (Strings.isEmpty(owner)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcIds == null) {
+
+        if (ddcIds == null || ddcIds.size() <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
+
+        ddcIds.forEach((ddcId) -> {
+            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+                throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
+            }
+        });
 
         String encodedFunction = ddc1155.burnBatch(owner, ddcIds).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_BURNBATCH, encodedFunction, signEventListener, sender).getTransactionHash();
@@ -348,10 +365,12 @@ public class DDC1155Service extends BaseService {
         if (Strings.isEmpty(owner)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
         }
+
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -374,16 +393,21 @@ public class DDC1155Service extends BaseService {
 
         ArrayList<String> owners = new ArrayList<>();
         ArrayList<BigInteger> ddcIds = new ArrayList<>();
+
         ddcs.forEach((owner, ddcId) -> {
+
             if (Strings.isEmpty(owner)) {
                 throw new DDCException(ErrorMessage.ACC_ADDR_IS_EMPTY);
             }
+
             if (!AddressUtils.isValidAddress(owner)) {
                 throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
             }
-            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+            if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
                 throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
             }
+
             owners.add(owner);
             ddcIds.add(ddcId);
         });
@@ -400,7 +424,8 @@ public class DDC1155Service extends BaseService {
      * @throws Exception Exception
      */
     public String ddcURI(BigInteger ddcId) throws Exception {
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -419,15 +444,24 @@ public class DDC1155Service extends BaseService {
      * @throws Exception Exception
      */
     public String setURI(String sender, String owner, BigInteger ddcId, String ddcURI) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
         if (!AddressUtils.isValidAddress(sender)) {
             throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (Strings.isEmpty(owner)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
         }
 
         if (!AddressUtils.isValidAddress(owner)) {
             throw new DDCException(ErrorMessage.OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0)))<=0) {
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
             throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
         }
 
@@ -437,5 +471,183 @@ public class DDC1155Service extends BaseService {
 
         String encodedFunction = ddc1155.setURI(owner, ddcId, ddcURI).encodeFunctionCall();
         return signAndSend(ddc1155, DDC1155.FUNC_SETURI, encodedFunction, signEventListener, sender).getTransactionHash();
+    }
+
+    /**
+     * Query nonce
+     * Query the latest nonce value corresponding to the signer's account.
+     * Note: this query is only applicable to the nonce value query corresponding to the initiating meta transaction.
+     *
+     * @return Latest Nonce
+     * @throws Exception Exception
+     */
+    public BigInteger getNonce(String from) throws Exception {
+        if (Strings.isEmpty(from)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(from)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        return ddc1155.getNonce(from).send();
+    }
+
+    /**
+     * Mint DDC meta transaction securely
+     * The platform side and end user call this API to generate DDC meta transaction securely
+     *
+     * @param sender   Caller address
+     * @param to       Recipient account
+     * @param amount   Number of DDCs
+     * @param ddcURI   DDC resource identifier
+     * @param data     Additional data
+     * @param nonce    1 more than the actual nonce of the signer
+     * @param deadline The expiration time must be a timestamp equal to 0 or greater than or equal to the block
+     * @param sign     Signed transaction
+     * @return hash    Transaction hash
+     * @throws Exception Exception
+     */
+    public String metaSafeMint(String sender, String to, BigInteger amount, String ddcURI, byte[] data, BigInteger nonce, BigInteger deadline, byte[] sign) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (Strings.isEmpty(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+            throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
+        }
+
+        String encodedFunction = ddc1155.metaSafeMint(to, amount, ddcURI, data, nonce, deadline, sign).encodeFunctionCall();
+        return signAndSend(ddc1155, DDC1155.FUNC_METASAFEMINT, encodedFunction, signEventListener, sender).getTransactionHash();
+    }
+
+    /**
+     * Transfer DDC meta transaction securely
+     * The platform side and end user call this API to transfer DDC meta transaction securely
+     *
+     * @param sender   Caller address
+     * @param to       Recipient account
+     * @param ddcId    DDC Unique Identifier
+     * @param amount   Number of DDCs to be transferred
+     * @param data     Additional data
+     * @param nonce    1 more than the actual nonce of the signer
+     * @param deadline The expiration time must be a timestamp equal to 0 or greater than or equal to the block
+     * @param sign     Signed transaction
+     * @return hash    Transaction hash
+     * @throws Exception Exception
+     */
+    public String metaSafeTransferFrom(String sender, String from, String to, BigInteger ddcId, BigInteger amount, byte[] data, BigInteger nonce, BigInteger deadline, byte[] sign) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (Strings.isEmpty(from)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(from)) {
+            throw new DDCException(ErrorMessage.FROM_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (Strings.isEmpty(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+            throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
+        }
+
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+            throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
+        }
+
+        String encodedFunction = ddc1155.metaSafeTransferFrom(from, to, ddcId, amount, data, nonce, deadline, sign).encodeFunctionCall();
+        return signAndSend(ddc1155, DDC1155.FUNC_METASAFETRANSFERFROM, encodedFunction, signEventListener, sender).getTransactionHash();
+    }
+
+    /**
+     * Burn DDC meta transaction securely
+     * The platform side and end user call this API to burn DDC meta transaction securely
+     *
+     * @param sender   Caller address
+     * @param owner    Owner of DDC
+     * @param ddcId    DDC Unique Identifier
+     * @param nonce    1 more than the actual nonce of the signer
+     * @param deadline The expiration time must be a timestamp equal to 0 or greater than or equal to the block
+     * @param sign     Signed transaction
+     * @return hash    Transaction hash
+     * @throws Exception Exception
+     */
+    public String metaBurn(String sender, String owner, BigInteger ddcId, BigInteger nonce, BigInteger deadline, byte[] sign) throws Exception {
+
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (!AddressUtils.isValidAddress(owner)) {
+            throw new DDCException(ErrorMessage.OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (ddcId == null || ddcId.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+            throw new DDCException(ErrorMessage.DDCID_IS_WRONG);
+        }
+
+        String encodedFunction = ddc1155.metaBurn(owner, ddcId, nonce, deadline, sign).encodeFunctionCall();
+        return signAndSend(ddc1155, DDC1155.FUNC_METABURN, encodedFunction, signEventListener, sender).getTransactionHash();
+    }
+
+    /**
+     * Generate securely generate DDC
+     *
+     * @param sender Caller address
+     * @param to     Recipient account
+     * @param amount Number of DDCs
+     * @param ddcURI DDC resource identifier
+     * @param data   Additional data
+     * @return hash, Transaction hash
+     * @throws Exception Exception
+     */
+    public String safeMintHash(String sender, String to, BigInteger amount, String ddcURI, byte[] data) {
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+        if (Strings.isEmpty(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
+        }
+        if (!AddressUtils.isValidAddress(to)) {
+            throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+        if (amount == null || amount.compareTo(new BigInteger(String.valueOf(0))) <= 0) {
+            throw new DDCException(ErrorMessage.AMOUNT_IS_EMPTY);
+        }
+        if (Strings.isEmpty(ddcURI)) {
+            throw new DDCException(ErrorMessage.DDCURI_IS_EMPTY);
+        }
+        String encodedFunction = ddc1155.safeMint(to, amount, ddcURI, data).encodeFunctionCall();
+        return generateOfflineHash(ddc1155, DDC1155.FUNC_SAFEMINT, encodedFunction, signEventListener, sender);
     }
 }

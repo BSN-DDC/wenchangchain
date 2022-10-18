@@ -6,14 +6,19 @@ import org.web3j.tx.gas.ContractGasProvider;
 import java.math.BigInteger;
 
 /**
- * 提供gasLimit和gasPrice的管理
+ * Provide management of gasLimit and gasPrice
  *
+ * @author ysm
  */
 public class GasProvider implements ContractGasProvider {
-    //默认值
+    /**
+     * Defaults
+     */
     private String gasPrice = ConfigCache.get().getGasPrice();
     private String gasLimit = ConfigCache.get().getGasLimit();
-    //自定义值
+    /**
+     * custom value
+     */
     private String funcGaslimit = ConfigCache.get().getFuncGasLimit();
 
     @Override
@@ -29,11 +34,16 @@ public class GasProvider implements ContractGasProvider {
     @Override
     public BigInteger getGasLimit(String s) {
         if (!funcGaslimit.equals("0")) {
-            ConfigCache.get().getMap().put(s, funcGaslimit);
+            ConfigCache.get().getFuncGasLimitMap().put(s, funcGaslimit);
             ConfigCache.get().setFuncGasLimit("0");
-            return CommonUtils.string2BigInteger(ConfigCache.get().getMap().get(s));
+            return CommonUtils.string2BigInteger(ConfigCache.get().getFuncGasLimitMap().get(s));
         } else {
-            BigInteger defaultLimit = CommonUtils.string2BigInteger(ConfigCache.get().getMap().get(s));
+            String limit = ConfigCache.get().getFuncGasLimitMap().get(s);
+            if (limit == null) {
+                return new BigInteger(this.gasLimit);
+            }
+
+            BigInteger defaultLimit = CommonUtils.string2BigInteger(limit);
             if (defaultLimit.compareTo(new BigInteger(String.valueOf(0))) == 0) {
                 return new BigInteger(this.gasLimit);
             }

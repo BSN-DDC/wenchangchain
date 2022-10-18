@@ -2,18 +2,22 @@ package ai.bianjie.ddc.util;
 
 import org.web3j.crypto.WalletUtils;
 import org.bitcoinj.core.AddressFormatException;
+
 import java.io.ByteArrayOutputStream;
 
+/**
+ * @author ysm
+ */
 public class AddressUtils {
 
     private AddressUtils() {
     }
 
     /**
-     * 验证传入参数是否为有效的区块链账户地址格式
+     * Verify that the incoming parameter is a valid blockchain account address format
      *
-     * @param address 地址
-     * @return 返回验证结果，true或者false。
+     * @param address address
+     * @return Returns the validation result, true or false.
      */
     public static boolean isValidAddress(String address) {
         return WalletUtils.isValidAddress(address);
@@ -22,13 +26,13 @@ public class AddressUtils {
     /**
      * Helper for re-arranging bits into groups.
      *
-     * @param in       数组
-     * @param inStart  开始
-     * @param inLen    数组长度
-     * @param fromBits 转换前
-     * @param toBits   转换后
-     * @param pad      是否转换
-     * @return 返回byte数组
+     * @param in       array
+     * @param inStart  start
+     * @param inLen    array length
+     * @param fromBits before conversion
+     * @param toBits   after conversion
+     *                 Whether @param pad is converted
+     * @return return byte array
      * @throws AddressFormatException
      */
     public static byte[] convertBits(final byte[] in, final int inStart, final int inLen, final int fromBits,

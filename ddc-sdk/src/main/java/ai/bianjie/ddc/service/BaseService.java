@@ -1,6 +1,7 @@
 package ai.bianjie.ddc.service;
 
 import ai.bianjie.ddc.config.ConfigCache;
+import ai.bianjie.ddc.constant.ErrorMessage;
 import ai.bianjie.ddc.dto.Account;
 import ai.bianjie.ddc.dto.TxInfo;
 import ai.bianjie.ddc.exception.DDCException;
@@ -15,23 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.bitcoinj.crypto.*;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Hash;
 import org.web3j.crypto.Keys;
-import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.tx.Contract;
-import org.web3j.utils.Strings;
+import org.web3j.utils.Numeric;
 import sun.security.provider.SecureRandom;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static org.web3j.crypto.Hash.sha256;
 
 @Slf4j
 public class BaseService {
@@ -40,6 +39,7 @@ public class BaseService {
                     ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
 
     protected SignEventListener signEventListener;
+    private static final ThreadLocal<BigInteger> txNonce = new ThreadLocal<BigInteger>();
 
     /**
      * Get block information
@@ -49,7 +49,7 @@ public class BaseService {
      * @throws IOException
      */
     public EthBlock.Block getBlockByNumber(BigInteger blockNumber) throws IOException {
-        return Web3jUtils.getWeb3j().ethGetBlockByNumber(CommonUtils.getDefaultBlockParamter(blockNumber.toString()), true).send().getBlock();
+        return Web3jUtils.getWeb3j().ethGetBlockByNumber(CommonUtils.getDefaultBlockParameter(blockNumber.toString()), true).send().getBlock();
     }
 
     /**
@@ -106,6 +106,17 @@ public class BaseService {
     }
 
     /**
+     * Offline maintenance user nonce
+     *
+     * @param nonce When each account initiates a transaction from the same node,
+     *              the nonce value starts counting from 0, and sending a nonce corresponds to adding 1.
+     *              The subsequent nonce will be processed only after the previous nonce has been processed.
+     */
+    public void setNonce(BigInteger nonce) {
+        txNonce.set(nonce);
+    }
+
+    /**
      * Sign and send
      *
      * @param contract          Contract instance
@@ -123,29 +134,55 @@ public class BaseService {
         BigInteger gasPrice = gasProvider.getGasPrice();
         BigInteger gasLimit = gasProvider.getGasLimit(functionName);
 
-        //目标合约地址
+        // target contract address
         String contractAddr = contract.getContractAddress();
 
-        // 获取调用者的交易笔数
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(sender, DefaultBlockParameterName.PENDING).sendAsync().get();
-        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+        BigInteger nonce = txNonce.get();
 
-        // 生成待签名的交易
+        // If there is no user nonce in the cache, go to the chain to query
+        if ((nonce == null) || (nonce.compareTo(BigInteger.ZERO) == 0)) {
+            // Get the caller's transaction count
+            EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(sender, DefaultBlockParameterName.PENDING).sendAsync().get();
+            nonce = ethGetTransactionCount.getTransactionCount();
+        }
+
+        BigInteger gas = new BigInteger("0");
+        org.web3j.protocol.core.methods.request.Transaction transaction = new org.web3j.protocol.core.methods.request.Transaction(sender, nonce, gasPrice, gas, contractAddr, BigInteger.valueOf(0), encodedFunction);
+        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(transaction).sendAsync().get();
+        Response.Error estimateGasError = ethEstimateGas.getError();
+        if (estimateGasError != null) {
+            throw new DDCException(estimateGasError.getCode(), estimateGasError.getMessage());
+        }
+
+        // Estimated gas is used by default when gasLimit == null
+        gasLimit = gasLimit != null && gasLimit.compareTo(gas) != 0 ? gasLimit : Numeric.toBigInt(ethEstimateGas.getResult());
+
+        // An error is reported when the specified gasLimit is too low
+        if (gasLimit.compareTo(Numeric.toBigInt(ethEstimateGas.getResult())) < 0) {
+            throw new DDCException(ErrorMessage.ERR_GASLIMIT);
+        }
+
+        // Generate transaction to be signed
         RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, gasLimit, contractAddr, encodedFunction);
 
         SignEvent signEvent = new SignEvent(sender, rawTransaction);
 
-        // 调用签名方法，获取签名后的hexString
+        // Call the signature method to get the signed hexString
         String signedMessage = signEventListener.signEvent(signEvent);
 
-        // 向链上发送交易
+        // Send a transaction to the chain
         EthSendTransaction sendTransaction = web3j.ethSendRawTransaction(signedMessage).sendAsync().get();
-        // 捕获链上返回的异常
+
+        // Catch exceptions returned on the chain
         Response.Error error = sendTransaction.getError();
         if (error != null) {
             throw new DDCException(error.getCode(), error.getMessage());
         }
-        // 返回交易结果
+
+        // Clear the nonce at the end of the transaction
+        txNonce.remove();
+
+        // return transaction result
         return sendTransaction;
     }
 
@@ -154,7 +191,7 @@ public class BaseService {
      *
      * @return Account, Account address
      */
-    public Account createAccountHex() {
+    public Account createAccount() {
         sun.security.provider.SecureRandom secureRandom = new SecureRandom();
         byte[] entropy = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
         secureRandom.engineNextBytes(entropy);
@@ -193,5 +230,40 @@ public class BaseService {
      */
     public String accountBech32ToHex(String addr) {
         return Bech32Utils.bech32ToHex(addr);
+    }
+
+    /**
+     * The platform party or end user can query the GAS fee balance corresponding to the chain account through this method.
+     *
+     * @param account Hex format account
+     * @return GAS balance
+     */
+    public BigInteger BalanceOfGas(String account) throws IOException {
+        return Web3jUtils.getWeb3j().ethGetBalance(account, DefaultBlockParameterName.LATEST).send().getBalance();
+    }
+
+    /**
+     * Generate Offline Hash
+     *
+     * @param contract          Contract instance
+     * @param functionName      method name to call
+     * @param encodedFunction   Function encoded by RLP serialization
+     * @param signEventListener The instance responsible for signing
+     * @return txHash, Offline Hash
+     */
+    public String generateOfflineHash(Contract contract, String functionName, String encodedFunction, SignEventListener signEventListener, String sender) {
+        GasProvider gasProvider = new GasProvider();
+        BigInteger gasPrice = gasProvider.getGasPrice();
+        BigInteger gasLimit = gasProvider.getGasLimit(functionName);
+        // target contract address
+        String contractAddr = contract.getContractAddress();
+        BigInteger nonce = txNonce.get();
+        // Generate transaction to be signed
+        RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, gasLimit, contractAddr, encodedFunction);
+        // Call the signature method to get the signed hexString
+        SignEvent signEvent = new SignEvent(sender, rawTransaction);
+        String signedMessage = signEventListener.signEvent(signEvent);
+        String txHash = Hash.sha3(signedMessage);
+        return txHash;
     }
 }

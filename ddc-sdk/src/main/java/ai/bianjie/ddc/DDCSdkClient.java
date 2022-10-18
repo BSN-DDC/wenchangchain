@@ -26,7 +26,12 @@ public class DDCSdkClient {
         private String authorityLogicAddress;
         private String chargeLogicAddress;
         private SignEventListener signEventListener;
+        private String credentials;
 
+        public Builder setCredentials(String credentials) {
+            this.credentials = credentials;
+            return this;
+        }
 
         public Builder setGasPrice(String gasPrice) {
             this.gasPrice = gasPrice;
@@ -98,8 +103,9 @@ public class DDCSdkClient {
         Web3jUtils.reset();
         return true;
     }
+
     public Boolean setConnectTimeout(long timeout) {
-        if (timeout==0) {
+        if (timeout == 0) {
             return false;
         }
         ConfigCache.get().setConnectTimeout(timeout);

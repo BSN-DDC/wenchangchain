@@ -1,6 +1,9 @@
 package ai.bianjie.ddc.service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import ai.bianjie.ddc.contract.Authority;
 import org.web3j.utils.Strings;
@@ -22,17 +25,18 @@ public class AuthorityService extends BaseService {
     }
 
     /**
-     * The operator can directly create the platform side or the end user of the platform side by calling this method.
+     * The platform side can create DDC account information by calling this method,
+     * the upper-level role can operate the lower-level role account,
+     * and the platform side can only add terminal accounts through this method.
      *
-     * @param sender    Caller address
-     * @param account   DDC chain account address
-     * @param accName   The account name corresponding to the DDC account
-     * @param accDID    DID information corresponding to the DDC account
-     * @param leaderDID The DID of the superior account corresponding to the ordinary account
+     * @param sender      Caller address
+     * @param account     DDC chain account address
+     * @param accountName The account name corresponding to the DDC account
+     * @param accountDID  DID information corresponding to the DDC account
      * @return hash, Transaction hash
      * @throws Exception
      */
-    public String addAccountByOperator(String sender, String account, String accName, String accDID, String leaderDID) throws Exception {
+    public String addAccountByPlatform(String sender, String account, String accountName, String accountDID) throws Exception {
         if (Strings.isEmpty(sender)) {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
         }
@@ -49,12 +53,69 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (Strings.isEmpty(accName)) {
+        if (Strings.isEmpty(accountName)) {
             throw new DDCException(ErrorMessage.ACCOUNT_NAME_IS_EMPTY);
         }
 
-        String encodedFunction = authority.addAccountByOperator(account, accName, accDID, leaderDID).encodeFunctionCall();
-        return signAndSend(authority, Authority.FUNC_ADDACCOUNTBYOPERATOR, encodedFunction, signEventListener, sender).getTransactionHash();
+        String encodedFunction = authority.addAccountByPlatform(account, accountName, accountDID).encodeFunctionCall();
+        return signAndSend(authority, Authority.FUNC_ADDACCOUNTBYPLATFORM, encodedFunction, signEventListener, sender).getTransactionHash();
+    }
+
+    /**
+     * The platform side can create batches of DDC chain account information by calling this method,
+     * the upper-level role can operate the lower-level role account,
+     * and the platform side can only add terminal accounts through this method.
+     *
+     * @param sender         Caller address
+     * @param accountNames   Account name List
+     * @param accountDIDs    Account did List
+     * @param accountAddress Account address List
+     * @return hash, Transaction hash
+     * @throws Exception
+     */
+    public String addBatchAccountByPlatform(String sender, List<String> accountNames, List<String> accountDIDs, List<String> accountAddress) throws Exception {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+        }
+
+        if (accountNames == null || accountNames.size() <= 0) {
+            throw new DDCException(ErrorMessage.ERR_NAMES_SIZE);
+        }
+        if (accountDIDs == null || accountDIDs.size() <= 0) {
+            throw new DDCException(ErrorMessage.ERR_DIDS_SIZE);
+        }
+        if (accountAddress == null || accountAddress.size() <= 0) {
+            throw new DDCException(ErrorMessage.ERR_ACCOUNTS_SIZE);
+        }
+        if (accountNames.size() != accountDIDs.size()) {
+            throw new DDCException(ErrorMessage.ERR_NAME_DID_ADDRESS_SIZE);
+        }
+        if (accountNames.size() != accountAddress.size()) {
+            throw new DDCException(ErrorMessage.ERR_NAME_DID_ADDRESS_SIZE);
+        }
+
+        accountAddress.forEach(address -> {
+            if (Strings.isEmpty(address)) {
+                throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
+            }
+
+            if (!AddressUtils.isValidAddress(address)) {
+                throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            }
+        });
+
+        accountNames.forEach(name -> {
+            if (Strings.isEmpty(name)) {
+                throw new DDCException(ErrorMessage.ACCOUNT_NAME_IS_EMPTY);
+            }
+        });
+
+        String encodedFunction = authority.addBatchAccountByPlatform(accountAddress, accountNames, accountDIDs).encodeFunctionCall();
+        return signAndSend(authority, Authority.FUNC_ADDBATCHACCOUNTBYPLATFORM, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
@@ -104,47 +165,17 @@ public class AuthorityService extends BaseService {
             throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
         }
 
-        if (state == null) {
-            throw new DDCException(ErrorMessage.ACCOUNT_STASTUS_IS_EMPTY);
-        }
-
         String encodedFunction = authority.updateAccountState(account, state, changePlatformState).encodeFunctionCall();
         return signAndSend(authority, Authority.FUNC_UPDATEACCOUNTSTATE, encodedFunction, signEventListener, sender).getTransactionHash();
     }
 
     /**
-     * The operator can authorize the cross-platform operation of DDC by calling this method.
+     * The platform can call this method to query the switch status of the added chain account on the platform side.
      *
-     * @param sender caller address
-     * @param from authorizer
-     * @param to receiver
-     * @param approved authorization logo
-     * @return returns the transaction hash
+     * @return switch status
      * @throws Exception
      */
-    public String crossPlatformApproval(String sender, String from, String to, Boolean approved) throws Exception {
-        if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-        }
-
-        if (Strings.isEmpty(from)) {
-            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
-        }
-
-        if (!AddressUtils.isValidAddress(from)) {
-            throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-        }
-
-        if (Strings.isEmpty(to)) {
-            throw new DDCException(ErrorMessage.ACCOUNT_IS_EMPTY);
-        }
-
-        if (!AddressUtils.isValidAddress(to)) {
-            throw new DDCException(ErrorMessage.ACCOUNT_IS_NOT_ADDRESS_FORMAT);
-        }
-
-        String encodedFunction = authority.crossPlatformApproval(from, to, approved).encodeFunctionCall();
-        return signAndSend(authority, Authority.FUNC_CROSSPLATFORMAPPROVAL, encodedFunction, signEventListener, sender).getTransactionHash();
+    public Boolean switcherStateOfPlatform() throws Exception {
+        return Web3jUtils.getAuthority().switcherStateOfPlatform().send();
     }
-
 }

@@ -1,15 +1,16 @@
 package ai.bianjie.ddc.config;
 
-import ai.bianjie.ddc.contract.Authority;
-import ai.bianjie.ddc.contract.Charge;
-import ai.bianjie.ddc.contract.DDC1155;
-import ai.bianjie.ddc.contract.DDC721;
-
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigInfo {
-    private Map<String, String> map = new HashMap<>();
+    private Map<String, String> funcGasLimitMap = new HashMap<>();
+
+    /**
+     * Offline maintenance user nonce
+     */
+    private BigInteger nonce;
 
     private String opbGatewayAddress = "http://192.168.150.43:8545";
 
@@ -21,119 +22,47 @@ public class ConfigInfo {
 
     private String gasPrice = "10000000";
 
-    private String gasLimit = "300000";
+    private String gasLimit = "0";
 
     private String funcGasLimit = "0";
 
-
-    //authority合约
+    /**
+     * authority contract
+     */
     private String authorityLogicBIN;
     private String authorityLogicAddress = "0x368d4064762a22640E8a79cA6B62F0815f3e2F9C";
 
-    //charge合约
+    /**
+     * charge contract
+     */
     private String chargeLogicBIN;
     private String chargeLogicAddress = "0xcA65BAbCB23053B0b1Fb3bB2d79E487e56e1FBC4";
 
-    //721合约
+    /**
+     * DDC721 contract
+     */
     private String ddc721BIN;
     private String ddc721Address = "0x02d40d287C851b760342126922f5D239321Dc4BC";
 
-    //1155合约
+    /**
+     * DDC1155 contract
+     */
     private String ddc1155BIN;
     private String ddc1155Address = "0xf6Bc71043a176114A8E4cfF686D6F417b971d5bA";
 
     public ConfigInfo() {
-        //默认为10s
+        /**
+         * default 10s
+         */
         connectTimeout = 10;
+    }
 
-        //自定义每个方法默认的gasLimit
-        map.put(Authority.FUNC_ACCOUNTAVAILABLE, "0");
-        map.put(Authority.FUNC_ADDACCOUNTBYOPERATOR, "0");
-        map.put(Authority.FUNC_ADDFUNCTION, "0");
-        map.put(Authority.FUNC_ADDOPERATOR, "0");
-        map.put(Authority.FUNC_CHECKAVAILABLEANDROLE, "0");
-        map.put(Authority.FUNC_DELFUNCTION, "0");
-        map.put(Authority.FUNC_GETACCOUNT, "0");
-        map.put(Authority.FUNC_GETFUNCTIONS, "0");
-        map.put(Authority.FUNC_HASFUNCTIONPERMISSION, "0");
-        map.put(Authority.FUNC_INITIALIZE, "0");
-        map.put(Authority.FUNC_ONEPLATFORMCHECK, "0");
-        map.put(Authority.FUNC_OWNER, "0");
-        map.put(Authority.FUNC_RENOUNCEOWNERSHIP, "0");
-        map.put(Authority.FUNC_TRANSFEROWNERSHIP, "0");
-        map.put(Authority.FUNC_UPGRADETO, "0");
-        map.put(Authority.FUNC_UPDATEACCOUNTSTATE, "0");
-        map.put(Authority.FUNC_UPGRADETOANDCALL, "0");
-        map.put(Authority.FUNC_CROSSPLATFORMAPPROVAL, "0");
-        map.put(Authority.FUNC_CROSSPLATFORMCHECK, "0");
+    public BigInteger getNonce() {
+        return nonce;
+    }
 
-        map.put(Charge.FUNC_BALANCEOF, "0");
-        map.put(Charge.FUNC_DELDDC, "0");
-        map.put(Charge.FUNC_DELFEE, "0");
-        map.put(Charge.FUNC_INITIALIZE, "0");
-        map.put(Charge.FUNC_OWNER, "0");
-        map.put(Charge.FUNC_PAY, "0");
-        map.put(Charge.FUNC_QUERYFEE, "0");
-        map.put(Charge.FUNC_RECHARGE, "0");
-        map.put(Charge.FUNC_RENOUNCEOWNERSHIP, "0");
-        map.put(Charge.FUNC_SELFRECHARGE, "0");
-        map.put(Charge.FUNC_SETAUTHORITYPROXYADDRESS, "0");
-        map.put(Charge.FUNC_SETFEE, "0");
-        map.put(Charge.FUNC_SETTLEMENT, "0");
-        map.put(Charge.FUNC_TOTALSUPPLY, "0");
-        map.put(Charge.FUNC_TRANSFEROWNERSHIP, "0");
-        map.put(Charge.FUNC_UPGRADETO, "0");
-        map.put(Charge.FUNC_UPGRADETOANDCALL, "0");
-        map.put(DDC721.FUNC_APPROVE, "0");
-        map.put(DDC721.FUNC_BALANCEOF, "0");
-        map.put(DDC721.FUNC_BURN, "0");
-        map.put(DDC721.FUNC_DDCURI, "0");
-        map.put(DDC721.FUNC_FREEZE, "0");
-        map.put(DDC721.FUNC_GETAPPROVED, "0");
-        map.put(DDC721.FUNC_INITIALIZE, "0");
-        map.put(DDC721.FUNC_ISAPPROVEDFORALL, "0");
-        map.put(DDC721.FUNC_MINT, "0");
-        map.put(DDC721.FUNC_NAME, "0");
-        map.put(DDC721.FUNC_OWNER, "0");
-        map.put(DDC721.FUNC_OWNEROF, "0");
-        map.put(DDC721.FUNC_RENOUNCEOWNERSHIP, "0");
-        map.put(DDC721.FUNC_SAFEMINT, "0");
-        map.put(DDC721.FUNC_SAFETRANSFERFROM, "0");
-        map.put(DDC721.FUNC_SETAPPROVALFORALL, "0");
-        map.put(DDC721.FUNC_SETAUTHORITYPROXYADDRESS, "0");
-        map.put(DDC721.FUNC_SETCHARGEPROXYADDRESS, "0");
-        map.put(DDC721.FUNC_SETNAMEANDSYMBOL, "0");
-        map.put(DDC721.FUNC_SUPPORTSINTERFACE, "0");
-        map.put(DDC721.FUNC_SYMBOL, "0");
-        map.put(DDC721.FUNC_TRANSFERFROM, "0");
-        map.put(DDC721.FUNC_TRANSFEROWNERSHIP, "0");
-        map.put(DDC721.FUNC_UNFREEZE, "0");
-        map.put(DDC721.FUNC_UPGRADETO, "0");
-        map.put(DDC721.FUNC_UPGRADETOANDCALL, "0");
-        map.put(DDC721.FUNC_SETURI, "0");
-        map.put(DDC1155.FUNC_BALANCEOF, "0");
-        map.put(DDC1155.FUNC_BALANCEOFBATCH, "0");
-        map.put(DDC1155.FUNC_BURN, "0");
-        map.put(DDC1155.FUNC_BURNBATCH, "0");
-        map.put(DDC1155.FUNC_DDCURI, "0");
-        map.put(DDC1155.FUNC_FREEZE, "0");
-        map.put(DDC1155.FUNC_INITIALIZE, "0");
-        map.put(DDC1155.FUNC_ISAPPROVEDFORALL, "0");
-        map.put(DDC1155.FUNC_OWNER, "0");
-        map.put(DDC1155.FUNC_RENOUNCEOWNERSHIP, "0");
-        map.put(DDC1155.FUNC_SAFEBATCHTRANSFERFROM, "0");
-        map.put(DDC1155.FUNC_SAFEMINT, "0");
-        map.put(DDC1155.FUNC_SAFEMINTBATCH, "0");
-        map.put(DDC1155.FUNC_SAFETRANSFERFROM, "0");
-        map.put(DDC1155.FUNC_SETAPPROVALFORALL, "0");
-        map.put(DDC1155.FUNC_SETAUTHORITYPROXYADDRESS, "0");
-        map.put(DDC1155.FUNC_SETCHARGEPROXYADDRESS, "0");
-        map.put(DDC1155.FUNC_SUPPORTSINTERFACE, "0");
-        map.put(DDC1155.FUNC_TRANSFEROWNERSHIP, "0");
-        map.put(DDC1155.FUNC_UNFREEZE, "0");
-        map.put(DDC1155.FUNC_UPGRADETO, "0");
-        map.put(DDC1155.FUNC_UPGRADETOANDCALL, "0");
-        map.put(DDC1155.FUNC_SETURI, "0");
+    public void setNonce(BigInteger nonce) {
+        this.nonce = nonce;
     }
 
     public String getOpbGatewayAddress() {
@@ -248,12 +177,12 @@ public class ConfigInfo {
         this.chargeLogicBIN = chargeLogicBIN;
     }
 
-    public Map<String, String> getMap() {
-        return map;
+    public Map<String, String> getFuncGasLimitMap() {
+        return funcGasLimitMap;
     }
 
-    public void setMap(Map<String, String> map) {
-        this.map = map;
+    public void setFuncGasLimitMap(Map<String, String> funcGasLimitMap) {
+        this.funcGasLimitMap = funcGasLimitMap;
     }
 
     public long getConnectTimeout() {

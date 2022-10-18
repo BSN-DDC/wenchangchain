@@ -1,32 +1,39 @@
 package ai.bianjie.ddc.service;
 
 import ai.bianjie.ddc.DDCSdkClient;
+import ai.bianjie.ddc.DDCSdkClientTest;
 import ai.bianjie.ddc.dto.BlockEventBean;
 import ai.bianjie.ddc.SignEventTest;
 import org.junit.jupiter.api.Test;
+import org.web3j.protocol.core.methods.response.BaseEventResponse;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 class BlockEventServiceTest {
+    DDCSdkClient client = DDCSdkClientTest.getClient();
 
-    DDCSdkClient client = new DDCSdkClient.Builder()
-            .setAuthorityLogicAddress("0xa7FC5B0F4A0085c5Ce689b919a866675Ce37B66b")
-            .setChargeLogicAddress("0x3BBb01B38958d4dbF1e004611EbB3c65979B0511")
-            .setDDC721Address("0x3B09b7A00271C5d9AE84593850dE3A526b8BF96e")
-            .setDDC1155Address("0xe5d3b9E7D16E03A4A1060c72b5D1cb7806DD9070")
-            .setGasLimit("300000")
-            .setGasPrice("10000000")
-            .setSignEventListener(new SignEventTest())
-            .init();
+    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
+        BlockEventService blockEventService = new BlockEventService();
+        BlockEventBean blockEvent = blockEventService.getBlockEvent(new BigInteger("3523189"));
+        System.out.println(blockEvent);
+    }
+
 
     @Test
-    void getBlockEvent() throws IOException, InterruptedException, ExecutionException {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
-        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
+    void getBlockEvent() throws IOException, ExecutionException, InterruptedException {
         BlockEventService blockEventService = new BlockEventService();
-        BlockEventBean blockEvent = blockEventService.getBlockEvent(new BigInteger("3058179"));
+        BlockEventBean blockEvent = blockEventService.getBlockEvent(new BigInteger("3523189"));
+        System.out.println(blockEvent);
+    }
+
+    @Test
+    void getEventByHash() throws Exception {
+        BlockEventService blockEventService = new BlockEventService();
+//        ArrayList<BaseEventResponse> baseEventResponses = blockEventService.analyzeEventsByTxHash("0x376e5325c7beae97165b7ef1e13b672f85ec1c96b73b50c6d2806f06882599e5");
+        ArrayList<BaseEventResponse> baseEventResponses = blockEventService.analyzeEventsByTxHash("0x91bb20d66f2c45b51df9d9fdf801e9527ea640c67af61ba99f426e57b58b7175");
+        System.out.println(baseEventResponses.toString());
     }
 }

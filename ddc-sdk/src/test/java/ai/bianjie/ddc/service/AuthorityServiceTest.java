@@ -1,58 +1,58 @@
 package ai.bianjie.ddc.service;
 
 import ai.bianjie.ddc.DDCSdkClient;
+import ai.bianjie.ddc.DDCSdkClientTest;
 import ai.bianjie.ddc.SignEventTest;
+import ai.bianjie.ddc.dto.AccountInfo;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 class AuthorityServiceTest {
 
-    DDCSdkClient client = new DDCSdkClient.Builder()
-            .setAuthorityLogicAddress("0xa7FC5B0F4A0085c5Ce689b919a866675Ce37B66b")
-            .setChargeLogicAddress("0x3BBb01B38958d4dbF1e004611EbB3c65979B0511")
-            .setDDC721Address("0x3B09b7A00271C5d9AE84593850dE3A526b8BF96e")
-            .setDDC1155Address("0xe5d3b9E7D16E03A4A1060c72b5D1cb7806DD9070")
-            .setGasLimit("300000")
-            .setGasPrice("10000000")
-            .setSignEventListener(new SignEventTest())
-            .init();
-
+    DDCSdkClient client = DDCSdkClientTest.getClient();
 
     AuthorityService authorityService = client.getAuthorityService();
-    String sender = "0x953488F7E292A7D6CB0BFF81BA806B82E5FD47A2";
+    String sender = DDCSdkClientTest.platform;
 
     @Test
-    void addConsumerByOperator() throws Exception {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
-        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
-        System.out.println(authorityService.addAccountByOperator(sender, "0x5804A5F927CE7382AD194FD25BCAA189DAD92A39", "test1", "did:wenchangoperator", "did:wenchangoperator"));
-
+    void addAccountByPlatform() throws Exception {
+        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
+        client.setGatewayApiKey("x-api-key");
+        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
+        System.out.println(authorityService.addAccountByPlatform(sender, "0xd55172e02723cec9f0a89dbcdc1675098152ac52", "cs", "did:cs"));
     }
 
     @Test
-    void getAccount() throws Exception {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
-        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
-        System.out.println(authorityService.getAccount("0x953488F7E292A7D6CB0BFF81BA806B82E5FD47A2"));
+    void addBatchAccountByPlatform() throws Exception {
+        List<String> accountNames = new ArrayList<>();
+        List<String> accountDIDs = new ArrayList<>();
+        List<String> accountAddresses = new ArrayList<>();
 
+        accountAddresses.add("0xA73786522046E2A8EB35D0292A9816087AD4043F");
+        accountNames.add("cs3");
+        accountDIDs.add("did:cs3");
+        System.out.println(authorityService.addBatchAccountByPlatform(sender, accountNames, accountDIDs, accountAddresses));
     }
 
     @Test
-    void updateAccState() throws Exception {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
-        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
+    void testGetAccount() throws Exception {
+        AccountInfo accountInfo = authorityService.getAccount(DDCSdkClientTest.consumer);
+        System.out.println(accountInfo);
+    }
+
+    @Test
+    void testUpdateAccState() throws Exception {
+        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/3c7c78de11494f219025f087bbacbd2a/evmrpc");
+        client.setGatewayApiKey("x-api-key");
+        client.setGatewayApiValue("5823d69e2198453e8662758e11cadacb");
         System.out.println(authorityService.updateAccState(sender, "0x5804A5F927CE7382AD194FD25BCAA189DAD92A39", new BigInteger("0"), true));
     }
 
     @Test
-    void crossPlatformApproval() throws Exception {
-        client.setGatewayUrl("https://opbtest.bsngate.com:18602/api/0e346e1fb134477cafb6c6c2583ce3c4/evmrpc");
-        client.setGatewayApiKey("903f4f9268ab4e2eac717c7200429776");
-        client.setGatewayApiValue("0c1dd14a41b14cfa83048d839a0593ff");
-        System.out.println(authorityService.crossPlatformApproval(sender, "0x5804A5F927CE7382AD194FD25BCAA189DAD92A39","918F7F275A6C2D158E5B76F769D3F1678958A334",true));
+    void switcherStateOfPlatform() throws Exception {
+        System.out.println(authorityService.switcherStateOfPlatform());
     }
 }

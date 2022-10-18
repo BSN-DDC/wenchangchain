@@ -8,10 +8,10 @@ public class Bech32Utils {
     }
 
     /**
-     * 以太坊的账户地址转为指定前缀的bech32编码的链账户地址
+     * The account address of Ethereum is converted to the bech32 encoded chain account address of the specified prefix
      *
-     * @param hrp       目标链账户地址的前缀
-     * @param pubkeyHex 字节格式的以太坊的链账户地址
+     * @param hrp       target chain account address prefix
+     * @param pubkeyHex chain account address of Ethereum in byte format
      * @return {@link String}
      */
     public static String toBech32(String hrp, byte[] pubkeyHex) {
@@ -20,10 +20,10 @@ public class Bech32Utils {
     }
 
     /**
-     * 以太坊的账户地址转为指定前缀的bech32编码的链账户地址
+     * The account address of Ethereum is converted to the bech32 encoded chain account address of the specified prefix
      *
-     * @param address bech32编码的链账户地址
-     * @return {@link byte[]} 字节格式的bech32编码的链账户地址
+     * @param address bech32 encoded chain account address
+     * @return {@link byte[]} bech32 encoded chain account address in byte format
      */
     public static byte[] fromBech32(String address) {
         Bech32.Bech32Data data = Bech32.decode(address);
@@ -31,21 +31,21 @@ public class Bech32Utils {
     }
 
     /**
-     * bech32编码的链账户地址转化为以太坊格式的地址
+     * The bech32 encoded chain account address is converted into an address in Ethereum format
      *
-     * @param address bech32编码的链账户地址
-     * @return {@link String} 以太坊格式的地址
+     * @param address bech32 encoded chain account address
+     * @return {@link String} address in ethereum format
      */
     public static String bech32ToHex(String address) {
         return Hex.toHexString(fromBech32(address)).toUpperCase();
     }
 
     /**
-     * 以太坊的账户地址转为指定前缀的bech32编码的链账户地址
+     * The account address of Ethereum is converted to the bech32 encoded chain account address of the specified prefix
      *
-     * @param hrp        目标链账户地址的前缀
-     * @param hexAddress 字符串格式的以太坊的链账户地址
-     * @return {@link String} 目标链账户地址
+     * @param hrp        target chain account address prefix
+     * @param hexAddress the chain account address of Ethereum in string format
+     * @return {@link String} target chain account address
      */
     public static String hexToBech32(String hrp, String hexAddress) {
         return toBech32(hrp, Hex.decode(hexAddress));
