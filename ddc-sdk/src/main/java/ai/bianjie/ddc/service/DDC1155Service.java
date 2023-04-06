@@ -40,7 +40,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(to)) {
@@ -76,7 +76,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(to)) {
@@ -127,7 +127,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(operator)) {
@@ -192,7 +192,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(from)) {
@@ -238,7 +238,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(from)) {
@@ -291,7 +291,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(owner)) {
@@ -327,7 +327,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
         if (Strings.isEmpty(owner)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);
@@ -450,7 +450,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(owner)) {
@@ -514,7 +514,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(to)) {
@@ -554,7 +554,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(from)) {
@@ -605,7 +605,7 @@ public class DDC1155Service extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (!AddressUtils.isValidAddress(owner)) {
@@ -633,7 +633,7 @@ public class DDC1155Service extends BaseService {
      */
     public String safeMintHash(String sender, String to, BigInteger amount, String ddcURI, byte[] data) {
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);

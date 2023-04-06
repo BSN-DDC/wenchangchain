@@ -7,10 +7,7 @@ import ai.bianjie.ddc.dto.TxInfo;
 import ai.bianjie.ddc.exception.DDCException;
 import ai.bianjie.ddc.listener.SignEvent;
 import ai.bianjie.ddc.listener.SignEventListener;
-import ai.bianjie.ddc.util.Bech32Utils;
-import ai.bianjie.ddc.util.CommonUtils;
-import ai.bianjie.ddc.util.GasProvider;
-import ai.bianjie.ddc.util.Web3jUtils;
+import ai.bianjie.ddc.util.*;
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.bitcoinj.crypto.*;
@@ -25,6 +22,7 @@ import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.tx.Contract;
 import org.web3j.utils.Numeric;
+import org.web3j.utils.Strings;
 import sun.security.provider.SecureRandom;
 
 import java.io.IOException;
@@ -265,5 +263,19 @@ public class BaseService {
         String signedMessage = signEventListener.signEvent(signEvent);
         String txHash = Hash.sha3(signedMessage);
         return txHash;
+    }
+
+    /***
+     * check Sender
+     * @param sender
+     */
+    public void checkSender(String sender) {
+        if (Strings.isEmpty(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_IS_EMPTY);
+        }
+
+        if (!AddressUtils.isValidAddress(sender)) {
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
+        }
     }
 }

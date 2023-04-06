@@ -54,7 +54,7 @@ public class BlockEventService extends BaseService {
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.UPDATEACCOUNTSTATE_EVENT))) {
                     list.addAll(authority.getUpdateAccountStateEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.CROSSPLATFORMAPPROVAL_EVENT))) {
-                    list.addAll(authority.getAdminChangedEvents(receipt));
+                    list.addAll(authority.getCrossPlatformApprovalEvents(receipt));
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.SYNCPLATFORMDID_EVENT))) {
                     list.addAll(authority.getSyncPlatformDIDEvents(receipt));
                 }
@@ -107,6 +107,13 @@ public class BlockEventService extends BaseService {
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(DDC1155.METATRANSFERSINGLE_EVENT))) {
                     list.addAll(ddc1155.getMetaTransferSingleEvents(receipt));
                 }
+            } else if (ConfigCache.get().getOPBCrossChainAppliedAddress().equalsIgnoreCase(log.getAddress())) {
+                OPBCrossChainApplied opbCrossChainApplied = Web3jUtils.getOPBCrossChainApplied();
+                if (log.getTopics().get(0).equals(EventEncoder.encode(OPBCrossChainApplied.CROSSCHAIN_EVENT))) {
+                    list.addAll(opbCrossChainApplied.getCrossChainEvents(receipt));
+                } else if (log.getTopics().get(0).equals(EventEncoder.encode(OPBCrossChainApplied.UPDATECROSSCHAINSTATUS_EVENT))) {
+                    list.addAll(opbCrossChainApplied.getUpdateCrossChainStatusEvents(receipt));
+                }
             }
             result.addAll(list);
 
@@ -132,10 +139,10 @@ public class BlockEventService extends BaseService {
         }
 
         List<EthBlock.TransactionObject> transactionObjects = new ArrayList<>();
-        blockInfo.getTransactions().forEach(t->transactionObjects.add((EthBlock.TransactionObject) t));
+        blockInfo.getTransactions().forEach(t -> transactionObjects.add((EthBlock.TransactionObject) t));
 //        Map<BigInteger,EthBlock.TransactionObject> transMap = transactionObjects.stream().
 //                collect(Collectors.toMap(EthBlock.TransactionObject::getTransactionIndex, Function.identity(), (oldValue, newValue) -> newValue));
-        Map<String,EthBlock.TransactionObject> transMap = transactionObjects.stream().
+        Map<String, EthBlock.TransactionObject> transMap = transactionObjects.stream().
                 collect(Collectors.toMap(EthBlock.TransactionObject::getHash, Function.identity()));
 
         List<String> address = new ArrayList<String>();
@@ -143,6 +150,7 @@ public class BlockEventService extends BaseService {
         address.add(ConfigCache.get().getChargeLogicAddress());
         address.add(ConfigCache.get().getDdc721Address());
         address.add(ConfigCache.get().getDdc1155Address());
+        address.add(ConfigCache.get().getOPBCrossChainAppliedAddress());
 
         EthFilter filter = new EthFilter(new DefaultBlockParameterNumber(blockNumber), new DefaultBlockParameterNumber(blockNumber), address)
                 .addOptionalTopics(EventEncoder.encode(Authority.ADDACCOUNT_EVENT),
@@ -169,7 +177,9 @@ public class BlockEventService extends BaseService {
                         EventEncoder.encode(DDC1155.ENTERBLACKLIST_EVENT),
                         EventEncoder.encode(DDC1155.EXITBLACKLIST_EVENT),
                         EventEncoder.encode(DDC1155.METATRANSFERSINGLE_EVENT),
-                        EventEncoder.encode(DDC1155.SETURI_EVENT));
+                        EventEncoder.encode(DDC1155.SETURI_EVENT),
+                        EventEncoder.encode(OPBCrossChainApplied.CROSSCHAIN_EVENT),
+                        EventEncoder.encode(OPBCrossChainApplied.UPDATECROSSCHAINSTATUS_EVENT));
         // subscribe to events
         ArrayList<BaseEventResponse> list = new ArrayList<>();
         Web3j w3 = Web3jUtils.getWeb3j();
@@ -198,7 +208,7 @@ public class BlockEventService extends BaseService {
             }
         }
 
-        Map<EthBlock.TransactionObject,List<BaseEventResponse>> res = list.stream().collect(Collectors.toMap(k->transMap.get(k.log.getTransactionHash()),v ->  {
+        Map<EthBlock.TransactionObject, List<BaseEventResponse>> res = list.stream().collect(Collectors.toMap(k -> transMap.get(k.log.getTransactionHash()), v -> {
                     List<BaseEventResponse> responses = new ArrayList<>();
                     responses.add(v);
                     return responses;
@@ -226,13 +236,14 @@ public class BlockEventService extends BaseService {
             ChargeOver chargeOver = Web3jUtils.getChargeOver();
             DDC721Over ddc721Over = Web3jUtils.getDDC721Over();
             DDC1155Over ddc1155Over = Web3jUtils.getDDC1155Over();
+            OPBCrossChainAppliedOver opbCrossChainAppliedOver = Web3jUtils.getOPBCrossChainAppliedOver();
             if (ConfigCache.get().getAuthorityLogicAddress().equalsIgnoreCase(log.getAddress())) {
                 if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.ADDACCOUNT_EVENT))) {
                     return authorityOver.addAccountEventFlowable(log);
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.UPDATEACCOUNTSTATE_EVENT))) {
                     return authorityOver.updateAccountStateEventFlowable(log);
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.CROSSPLATFORMAPPROVAL_EVENT))) {
-                    return authorityOver.adminChangedEventFlowable(log);
+                    return authorityOver.crossPlatformApprovalEventFlowable(log);
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.SETSWITCHERSTATEOFPLATFORM_EVENT))) {
                     return authorityOver.setSwitcherStateOfPlatformEventFlowable(log);
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(Authority.ADDBATCHACCOUNT_EVENT))) {
@@ -284,7 +295,14 @@ public class BlockEventService extends BaseService {
                 } else if (log.getTopics().get(0).equals(EventEncoder.encode(DDC1155.METATRANSFERSINGLE_EVENT))) {
                     return ddc1155Over.metaTransferSingleEventFlowable(log);
                 }
+            } else if (ConfigCache.get().getOPBCrossChainAppliedAddress().equalsIgnoreCase(log.getAddress())) {
+                if (log.getTopics().get(0).equals(EventEncoder.encode(OPBCrossChainApplied.CROSSCHAIN_EVENT))) {
+                    return opbCrossChainAppliedOver.crossChainEventFlowable(log);
+                } else if (log.getTopics().get(0).equals(EventEncoder.encode(OPBCrossChainApplied.UPDATECROSSCHAINSTATUS_EVENT))) {
+                    return opbCrossChainAppliedOver.updateCrossChainStatusEventFlowable(log);
+                }
             }
+
             return null;
         }
     }

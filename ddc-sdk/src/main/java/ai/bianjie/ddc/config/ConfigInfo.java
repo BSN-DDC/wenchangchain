@@ -50,6 +50,13 @@ public class ConfigInfo {
     private String ddc1155BIN;
     private String ddc1155Address = "0xf6Bc71043a176114A8E4cfF686D6F417b971d5bA";
 
+    /**
+     * OPBCrossChainApplied contract
+     */
+    private String opbCrossChainAppliedBIN;
+
+    private String opbCrossChainAppliedAddress = "0xf6Bc71043a176114A8E4cfF686D6F417b971d5bA";
+
     public ConfigInfo() {
         /**
          * default 10s
@@ -103,6 +110,14 @@ public class ConfigInfo {
 
     public void setDdc1155Address(String ddc1155Address) {
         this.ddc1155Address = ddc1155Address;
+    }
+
+    public String getOPBCrossChainAppliedAddress() {
+        return opbCrossChainAppliedAddress;
+    }
+
+    public void setOPBCrossChainAppliedAddress(String opbCrossChainAppliedAddress) {
+        this.opbCrossChainAppliedAddress = opbCrossChainAppliedAddress;
     }
 
     public String getAuthorityLogicAddress() {
@@ -163,6 +178,14 @@ public class ConfigInfo {
 
     public String getChargeLogicBIN() {
         return chargeLogicBIN;
+    }
+
+    public String getOpbCrossChainAppliedBIN() {
+        return opbCrossChainAppliedBIN;
+    }
+
+    public void setOpbCrossChainAppliedBIN(String opbCrossChainAppliedBIN) {
+        this.opbCrossChainAppliedBIN = opbCrossChainAppliedBIN;
     }
 
     public String getFuncGasLimit() {

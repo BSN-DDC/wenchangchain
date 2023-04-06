@@ -25,6 +25,7 @@ public class DDCSdkClient {
         private String ddc1155Address;
         private String authorityLogicAddress;
         private String chargeLogicAddress;
+        private String opbCrossChainAddress;
         private SignEventListener signEventListener;
         private String credentials;
 
@@ -63,6 +64,11 @@ public class DDCSdkClient {
             return this;
         }
 
+        public Builder setOpbCrossChainAddress(String opbCrossChainAddress) {
+            this.opbCrossChainAddress = opbCrossChainAddress;
+            return this;
+        }
+
         public Builder setSignEventListener(SignEventListener signEventListener) {
             if (signEventListener == null) {
                 throw new DDCException(ErrorMessage.NO_SIGN_EVENT_LISTNER);
@@ -72,7 +78,7 @@ public class DDCSdkClient {
         }
 
         public DDCSdkClient init() {
-            ConfigCache.initCache(gasPrice, gasLimit, ddc721Address, ddc1155Address, authorityLogicAddress, chargeLogicAddress);
+            ConfigCache.initCache(gasPrice, gasLimit, ddc721Address, ddc1155Address, authorityLogicAddress, chargeLogicAddress, opbCrossChainAddress);
             return new DDCSdkClient(this);
         }
     }
@@ -149,4 +155,12 @@ public class DDCSdkClient {
         return new DDC721Service(signEventListener);
     }
 
+    /**
+     * Get an instance of OPBCrossChainApplied contract service
+     *
+     * @return returns an instance of the OPBCrossChainAppliedService contract service
+     */
+    public OPBCrossChainAppliedService getOPBCrossChainAppliedService() {
+        return new OPBCrossChainAppliedService(signEventListener);
+    }
 }

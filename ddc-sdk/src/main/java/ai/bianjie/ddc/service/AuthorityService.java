@@ -1,9 +1,7 @@
 package ai.bianjie.ddc.service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ai.bianjie.ddc.contract.Authority;
 import org.web3j.utils.Strings;
@@ -42,7 +40,7 @@ public class AuthorityService extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(account)) {
@@ -79,7 +77,7 @@ public class AuthorityService extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (accountNames == null || accountNames.size() <= 0) {
@@ -154,7 +152,7 @@ public class AuthorityService extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(account)) {

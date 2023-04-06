@@ -8,22 +8,24 @@
     - [3.BSN-DDC-费用管理](#3bsn-ddc-费用管理)
     - [4.BSN-DDC-721](#4bsn-ddc-721)
     - [5.BSN-DDC-1155](#5bsn-ddc-1155)
-    - [6.BSN-DDC-交易查询](#6bsn-ddc-交易查询)
-    - [7.BSN-DDC-区块查询](#7bsn-ddc-区块查询)
-    - [8.BSN-DDC-数据解析](#8bsn-ddc-数据解析)
-    - [9.离线账户创建](#9离线账户创建)
-    - [10.查询Gas余额](#10查询gas余额)
-    - [11.设置账户 nonce](#11设置账户-nonce)
+    - [6.BSN-DDC-开放联盟链跨链](#6bsn-ddc-开放联盟链跨链)
+    - [7.BSN-DDC-交易查询](#7bsn-ddc-交易查询)
+    - [8.BSN-DDC-区块查询](#8bsn-ddc-区块查询)
+    - [9.BSN-DDC-数据解析](#9bsn-ddc-数据解析)
+    - [10.离线账户创建](#10离线账户创建)
+    - [11.查询Gas余额](#11查询gas余额)
+    - [12.设置账户 nonce](#12设置账户-nonce)
   - [终端用户可调用的如下方法：](#终端用户可调用的如下方法)
     - [1.初始化Client](#1初始化client-1)
     - [2.BSN-DDC-权限管理](#2bsn-ddc-权限管理-1)
     - [3.BSN-DDC-费用管理](#3bsn-ddc-费用管理-1)
     - [4.BSN-DDC-721](#4bsn-ddc-721-1)
     - [5.BSN-DDC-1155](#5bsn-ddc-1155-1)
-    - [6.BSN-DDC-数据解析](#6bsn-ddc-数据解析)
-    - [9.离线账户创建](#9离线账户创建-1)
-    - [10.查询Gas余额](#10查询gas余额-1)
-    - [11.设置账户 nonce](#11设置账户-nonce-1)
+    - [6.BSN-DDC-开放联盟链跨链](#6bsn-ddc-开放联盟链跨链-1)
+    - [7.BSN-DDC-数据解析](#7bsn-ddc-数据解析)
+    - [8.离线账户创建](#8离线账户创建-1)
+    - [9.查询Gas余额](#9查询gas余额-1)
+    - [10.设置账户 nonce](#10设置账户-nonce-1)
   - [测试用例](#测试用例)
 
 ## 平台方可调用的如下方法：
@@ -35,6 +37,7 @@
  计费代理合约地址：0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D
  DDC 721代理合约地址：0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870
  DDC 1155代理合约地址：0x0E762F4D11439B1130D402995328b634cB9c9973
+ DDC 开放联盟链跨链合约地址：0x0b563caa7F2Bd3E9b68C6e421973ddA2dD51f03a
 ```
 
 ### 1.初始化Client
@@ -55,11 +58,13 @@
     // irita 中 gaslimit 设置值即消耗值，扣费换算：1 uirita = 1e12 wei
     // 建议 gaslimit 设置为3000000以上，gasprice 设置为10000000以上
      DDCSdkClient client = new DDCSdkClient.Builder()
-                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29") // 权限代理合约地址
+                .setAuthorityLogicAddress("0xFa1d2d3EEd20C4E4F5b927D9730d9F4D56314B29")  // 权限代理合约地址
                 .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址 
-                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址 
+                .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")          // DDC 721代理合约地址 
                 .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
-                .setGasLimit("3000000")
+                .setOpbCrossChainAddress("0x0b563caa7F2Bd3E9b68C6e421973ddA2dD51f03a")
+ // DDC 开放联盟链跨链合约地址
+         		.setGasLimit("3000000")
                 .setGasPrice("10000000")
                 .setSignEventListener(new sign())
                 .init();
@@ -388,7 +393,28 @@
     
 ```
 
-### 6.BSN-DDC-交易查询
+### 6.BSN-DDC-开放联盟链跨链
+
+```java
+    //调用跨链方法发起跨链交易
+    String txhash = ddcSdkClient.getOPBCrossChainAppliedService().crossChainTransfer(
+        // 文昌链签名账户地址
+        "0x88d9a495d9c4b70a0d78b43a99b201bb314c8fd5", 
+        // DDC类型
+        DDCTypeEnum.ERC721,		
+        // DDC唯一标识
+        new BigInteger("1572"),	
+        // 是否锁定
+        Boolean.TRUE, 			
+        // 目标链chianId
+        new BigInteger("3"),    
+        // 目标链接收者账户地址
+        "0x36051ca0884645590d71196DBefe9FB32FEBdEf9",
+        // 附加数据
+        "0x".getBytes(StandardCharsets.UTF_8));
+```
+
+### 7.BSN-DDC-交易查询
 
 ```java
 	BaseService baseService = new BaseService();
@@ -410,7 +436,7 @@
 
 ```
 
-### 7.BSN-DDC-区块查询
+### 8.BSN-DDC-区块查询
 
 ```java
 	BaseService baseService = new BaseService();
@@ -420,7 +446,7 @@
     
 ```
 
-### 8.BSN-DDC-数据解析
+### 9.BSN-DDC-数据解析
 
 ```
 7.BSN-DDC-数据解析
@@ -482,7 +508,7 @@
         
 ```
 
-### 9.离线账户创建
+### 10.离线账户创建
 
 ```java
 // 创建Hex格式账户
@@ -496,14 +522,14 @@ BaseService baseService=new BaseService();
         System.out.println("================================" + addHex);
 ```
 
-### 10.查询Gas余额
+### 11.查询Gas余额
 
 ```java
 // 查询链账户Gas余额
 System.out.println(baseService.BalanceOfGas("链账户地址"));
 ```
 
-### 11.设置账户 nonce
+### 12.设置账户 nonce
 
 ```java
 BaseService baseService =new BaseService();
@@ -859,7 +885,28 @@ baseService.setNonce(new BigInteger("481"));
     String Txhash10 = ddc1155Service.metaBurn( sender, owner, ddcId, amount, data, nonce, deadline, sign)
 ```
 
-### 6.BSN-DDC-数据解析
+### 6.BSN-DDC-开放联盟链跨链
+
+```java
+    //调用跨链方法发起跨链交易
+    String txhash = ddcSdkClient.getOPBCrossChainAppliedService().crossChainTransfer(
+        // 文昌链签名账户地址
+        "0x88d9a495d9c4b70a0d78b43a99b201bb314c8fd5", 
+        // DDC类型
+        DDCTypeEnum.ERC721,		
+        // DDC唯一标识
+        new BigInteger("1572"),	
+        // 是否锁定
+        Boolean.TRUE, 			
+        // 目标链chianId
+        new BigInteger("3"),    
+        // 目标链接收者账户地址
+        "0x36051ca0884645590d71196DBefe9FB32FEBdEf9",
+        // 附加数据
+        "0x".getBytes(StandardCharsets.UTF_8));
+```
+
+### 7.BSN-DDC-数据解析
 
 ```
 5.BSN-DDC-数据解析
@@ -908,7 +955,7 @@ baseService.setNonce(new BigInteger("481"));
         
 ```
 
-### 9.离线账户创建
+### 8.离线账户创建
 
 ```java
 // 创建Hex格式账户
@@ -922,14 +969,14 @@ BaseService baseService=new BaseService();
         System.out.println("================================" + addHex);
 ```
 
-### 10.查询Gas余额
+### 9.查询Gas余额
 
 ```java
 // 查询链账户Gas余额
 System.out.println(baseService.BalanceOfGas("链账户地址"));
 ```
 
-### 11.设置账户 nonce
+### 10.设置账户 nonce
 
 ```java
 BaseService baseService =new BaseService();
@@ -973,19 +1020,21 @@ baseService.setNonce(new BigInteger("481"));
 
 ## 测试用例
 
-[AuthorityServiceTest.java](/src/test/java/ai/bianjie/ddc/service/AuthorityServiceTest.java)
+[AuthorityServiceTest.java](src/test/java/ai/bianjie/ddc/service/AuthorityServiceTest.java)
 
-[ChargeServiceTest.java](/src/test/java/ai/bianjie/ddc/service/ChargeServiceTest.java)
+[ChargeServiceTest.java](src/test/java/ai/bianjie/ddc/service/ChargeServiceTest.java)
 
-[BaseServiceTest.java](/src/test/java/ai/bianjie/ddc/service/BaseServiceTest.java)
+[BaseServiceTest.java](src/test/java/ai/bianjie/ddc/service/BaseServiceTest.java)
 
-[BlockEventServiceTest.java](/src/test/java/ai/bianjie/ddc/service/BlockEventServiceTest.java)
+[BlockEventServiceTest.java](src/test/java/ai/bianjie/ddc/service/BlockEventServiceTest.java)
 
-[DDC721ServiceTest.java](/src/test/java/ai/bianjie/ddc/service/DDC721ServiceTest.java)
+[DDC721ServiceTest.java](src/test/java/ai/bianjie/ddc/service/DDC721ServiceTest.java)
 
-[DDC1155ServiceTest.java](/src/test/java/ai/bianjie/ddc/service/DDC1155ServiceTest.java)
+[DDC1155ServiceTest.java](src/test/java/ai/bianjie/ddc/service/DDC1155ServiceTest.java)
 
-[SignEventTest.java](/src/test/java/ai/bianjie/ddc/SignEventTest.java)
+[SignEventTest.java](src/test/java/ai/bianjie/ddc/SignEventTest.java)
 
-[DDCSdkClientTest.java](/src/test/java/ai/bianjie/ddc/DDCSdkClientTest.java)
+[DDCSdkClientTest.java](src/test/java/ai/bianjie/ddc/DDCSdkClientTest.java)
+
+[OPBCrossChainAppliedServiceTest.java](src/test/java/ai/bianjie/ddc/OPBCrossChainAppliedServiceTest.java)
 

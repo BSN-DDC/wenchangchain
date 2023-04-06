@@ -7,14 +7,11 @@ import ai.bianjie.ddc.listener.SignEventListener;
 import ai.bianjie.ddc.util.AddressUtils;
 import ai.bianjie.ddc.util.HexUtils;
 import ai.bianjie.ddc.util.Web3jUtils;
-import com.google.common.collect.Multimap;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ChargeService extends BaseService {
     private Charge charge;
@@ -40,7 +37,7 @@ public class ChargeService extends BaseService {
         }
 
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (Strings.isEmpty(to)) {
@@ -70,7 +67,7 @@ public class ChargeService extends BaseService {
      */
     public String rechargeBatch(String sender, List<String> toList, List<BigInteger> amounts) throws Exception {
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
 
         if (toList.size() == 0 || toList == null) {
@@ -190,7 +187,7 @@ public class ChargeService extends BaseService {
      */
     public String rechargeHash(String sender, String to, BigInteger amount) {
         if (!AddressUtils.isValidAddress(sender)) {
-            throw new DDCException(ErrorMessage.SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT);
+            throw new DDCException(ErrorMessage.SENDER_NOT_STANDARD_ADDRESS_FORMAT);
         }
         if (Strings.isEmpty(to)) {
             throw new DDCException(ErrorMessage.TO_ACCOUNT_IS_EMPTY);

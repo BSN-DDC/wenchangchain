@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.jnr:jnr-unixsocket:0.38.17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../../soft/install/maven/repository/com/github/jnr/jnr-unixsocket/0.38.17/jnr-unixsocket-0.38.17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../../../../soft/install/maven/repository/com/github/jnr/jnr-unixsocket/0.38.17/jnr-unixsocket-0.38.17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../../soft/install/maven/repository/com/github/jnr/jnr-unixsocket/0.38.17/jnr-unixsocket-0.38.17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

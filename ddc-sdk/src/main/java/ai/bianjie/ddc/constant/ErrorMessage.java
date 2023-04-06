@@ -34,7 +34,7 @@ public enum ErrorMessage {
     READ_FILE_FAILED(1026, "raed file is failed"),
     SIGN_METHOD_EMPTY(1027, "sign method is empty"),
     NO_SIGN_EVENT_LISTNER(1028, "not register sign event listener"),
-    SENDER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1029, "sender account is not a standard address format"),
+    SENDER_NOT_STANDARD_ADDRESS_FORMAT(1029, "sender is not a standard address format"),
     OWNER_ACCOUNT_IS_NOT_ADDRESS_FORMAT(1030, "owner account is not a standard address format"),
     SIG_IS_EMPTY(1031, "sig is empty"),
     SIG_IS_NOT_4BYTE_HASH(1032, "sig is not 4 byte hash"),
@@ -42,11 +42,17 @@ public enum ErrorMessage {
     ERR_ACCOUNTS_SIZE(1034, "accounts size error"),
     DID_IS_EMPTY(1035, "did is empty"),
     ERR_AMOUNTS_SIZE(1036, "amounts size error"),
-    ERR_NAME_DID_ADDRESS_SIZE(1037, "account names, dids, addresses size are not equal"),
+    ERR_NAME_DID_ADDRESS_SIZE(1037, "account names, dids, addresses, leaderdids size are not equal"),
     ERR_NAMES_SIZE(1038, "names size error"),
     ERR_DIDS_SIZE(1039, "dids size error"),
-    ERR_TOLIST_ACCOUNTS_SIZE_MISMATCH(1040,"the size of to account and accounts mismatch"),
-    ERR_GASLIMIT(1041,"gasLimit too low")
+    ERR_TOLIST_ACCOUNTS_SIZE_MISMATCH(1040, "the size of to account and accounts mismatch"),
+    ERR_GASLIMIT(1041, "gasLimit too low"),
+    SENDER_IS_EMPTY(1042, "sender is empty"),
+    DDC_TYPE_IS_EMPTY(1043, "ddcType is null"),
+    TO_CHAIN_ID_IS_EMPTY(1044, "toChainID is empty"),
+    REMARK_IS_EMPTY(1045, "remark is empty"),
+    STATE_IS_NULL(1046, "state is null"),
+    CROSS_CHAIN_ID_IS_EMPTY(1047, "crossChainId is empty"),
     ;
 
     private Integer code;

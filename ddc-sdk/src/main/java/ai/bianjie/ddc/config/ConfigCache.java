@@ -12,7 +12,7 @@ public class ConfigCache {
 
     private static final ConcurrentHashMap<String, ConfigInfo> MAP = new ConcurrentHashMap<>();
 
-    public static void initCache(String gasPrice, String gasLimit, String ddc721Address, String ddc1155Address, String authorityLogicAddress, String chargeLogicAddress) {
+    public static void initCache(String gasPrice, String gasLimit, String ddc721Address, String ddc1155Address, String authorityLogicAddress, String chargeLogicAddress, String opbCrossChainAddress) {
         ConfigInfo configInfo = new ConfigInfo();
 
         if (!Strings.isEmpty(ddc721Address)) {
@@ -26,6 +26,9 @@ public class ConfigCache {
         }
         if (!Strings.isEmpty(chargeLogicAddress)) {
             configInfo.setChargeLogicAddress(chargeLogicAddress);
+        }
+        if (!Strings.isEmpty(opbCrossChainAddress)) {
+            configInfo.setOPBCrossChainAppliedAddress(opbCrossChainAddress);
         }
         if (!Strings.isEmpty(gasPrice)) {
             configInfo.setGasPrice(gasPrice);

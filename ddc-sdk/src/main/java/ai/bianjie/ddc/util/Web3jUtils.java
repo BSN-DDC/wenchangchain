@@ -21,11 +21,12 @@ public class Web3jUtils {
     private static Charge charge;
     private static DDC721 ddc721;
     private static DDC1155 ddc1155;
+    private static OPBCrossChainApplied opbCrossChainApplied;
     private static AuthorityOver authorityOver;
     private static ChargeOver chargeOver;
     private static DDC721Over ddc721Over;
     private static DDC1155Over ddc1155Over;
-
+    private static OPBCrossChainAppliedOver opbCrossChainAppliedOver;
     private static ECKeyPair ecKeyPair;
 
     static {
@@ -67,6 +68,13 @@ public class Web3jUtils {
         return ddc1155Over;
     }
 
+    public static OPBCrossChainAppliedOver getOPBCrossChainAppliedOver() {
+        if (opbCrossChainAppliedOver == null) {
+            opbCrossChainAppliedOver = OPBCrossChainAppliedOver.load(ConfigCache.get().getOPBCrossChainAppliedAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        }
+        return opbCrossChainAppliedOver;
+    }
+
     public static Authority getAuthority() {
         if (authority == null) {
             authority = Authority.load(ConfigCache.get().getAuthorityLogicAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
@@ -95,6 +103,13 @@ public class Web3jUtils {
         return ddc1155;
     }
 
+    public static OPBCrossChainApplied getOPBCrossChainApplied() {
+        if (opbCrossChainApplied == null) {
+            opbCrossChainApplied = OPBCrossChainApplied.load(ConfigCache.get().getOPBCrossChainAppliedAddress(), Web3jUtils.getWeb3j(), Credentials.create(ecKeyPair), new GasProvider());
+        }
+        return opbCrossChainApplied;
+    }
+
     public static Web3j getWeb3j() {
         if (web3j == null) {
             HttpServiceEx httpService = new HttpServiceEx(ConfigCache.get().getOpbGatewayAddress());
@@ -113,6 +128,7 @@ public class Web3jUtils {
         charge = null;
         ddc721 = null;
         ddc1155 = null;
+        opbCrossChainApplied = null;
         authorityOver = null;
         chargeOver = null;
         ddc721Over = null;

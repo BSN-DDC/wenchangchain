@@ -20,6 +20,7 @@ public class DDCSdkClientTest {
                 .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址
                 .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址
                 .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setOpbCrossChainAddress("0x0b563caa7F2Bd3E9b68C6e421973ddA2dD51f03a")  // OPB 跨链代理合约地址
                 .setGasLimit("3000000")
                 .setGasPrice("1")
                 .setSignEventListener(new SignEventTest())
@@ -36,6 +37,7 @@ public class DDCSdkClientTest {
                 .setChargeLogicAddress("0x0B8ae0e1b4a4Eb0a0740A250220eE3642d92dc4D")    // 计费代理合约地址
                 .setDDC721Address("0x354c6aF2cB870BEFEA8Ea0284C76e4A46B8F2870")         // DDC 721代理合约地址
                 .setDDC1155Address("0x0E762F4D11439B1130D402995328b634cB9c9973")        // DDC 1155代理合约地址
+                .setOpbCrossChainAddress("0x0b563caa7F2Bd3E9b68C6e421973ddA2dD51f03a")  // OPB 跨链代理合约地址
                 .setGasLimit("3000000")
                 .setGasPrice("1")
                 .setSignEventListener(new SignEventTest())
